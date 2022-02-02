@@ -85,7 +85,7 @@ namespace ExcelData
 
             // закроем лист
             excelappworkbook.Close();
-            // закроем экз. Excel
+            // закроем экз. Excel 
             excelapp.Quit();
             
             return sStr;
