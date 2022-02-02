@@ -56,27 +56,8 @@ namespace ExcelData
 
         public static string  ExcelBookTest()
         {
-            // получаем объект Excel
-            Excel.Application excelapp = new Excel.Application();
-            excelapp.Visible = false; // если нужно показать - true
-
-            //Excel.Workbooks excelappworkbooks = excelapp.Workbooks;
-
-            // окрываем сущ. файл
-            // https://docs.microsoft.com/ru-ru/office/vba/api/excel.workbooks.open
-            //var excelappworkbook =excelapp.Workbooks.Open(Const.FileXlsName,
-            //  Type.Missing, true , Type.Missing, Type.Missing,
-            //  Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-            //  Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-            //  Type.Missing, Type.Missing);
-            
-            var excelappworkbook = excelapp.Workbooks.Open(Filename: Const.FileXlsName, ReadOnly: true);
-
-            // Получаем его листы
-            var excelsheets = excelappworkbook.Worksheets;
-
             //Получаем ссылку на лист 
-            var excelworksheet = (Excel.Worksheet)excelsheets.get_Item(Const.ExcelWorksheet); // в моем случае "Расчет"
+            Excel.Worksheet excelworksheet = GetExcelSheet(Const.FileXlsName, Const.ExcelWorksheet);
             //Выбираем ячейку для вывода В4
             var excelcells = excelworksheet.get_Range("B4", Type.Missing);
 
@@ -84,39 +65,70 @@ namespace ExcelData
             var sStr = Convert.ToString(excelcells.Value2);
 
             // закроем лист
-            excelappworkbook.Close();
-            // закроем экз. Excel 
-            excelapp.Quit();
-            
+            //excelappworkbook.Close();
+            //excelworksheet.Application.ThisWorkbook.Close();
+            try
+            {
+                //excelworksheet.Application.ThisWorkbook.Close();
+                // закроем экз. Excel 
+                //excelapp.Quit();
+                excelworksheet.Application.Quit();
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Ошибка закрытия . Проверить диспетчер");
+                //throw;
+            }
+
+
             return sStr;
         }
 
-        public static Excel.Worksheet GetExcelSheet(string path, string sheetname)
+        /// <summary>
+        /// Возращает лист с данными.
+        /// </summary>
+        /// <param name="path">Путь к файлу Excel</param>
+        /// <param name="sheetname">Назв. листа</param>
+        /// <returns></returns>
+        public static  Excel.Worksheet GetExcelSheet(string path, string sheetname)
         {
-            return null;
+            // получаем объект Excel
+            Excel.Application excelapp = new Excel.Application();
+            excelapp.Visible = false; // если нужно показать - true
+            // окрываем сущ. файл
+            // https://docs.microsoft.com/ru-ru/office/vba/api/excel.workbooks.open
+            /*
+             Workbook_object.Open(
+                 FileName,         //Имя открываемого файла файла
+                 UpdateLinks,      //Способ обновления ссылок в файле
+                 ReadOnly,         //При значении true открытие только для чтения 
+                 Format,           //Определение формата символа разделителя
+                 Password,         //Пароль доступа к файлу до 15 символов
+                 WriteResPassword, //Пароль на сохранение файла
+                 IgnoreReadOnlyRecommended, //При значении true отключается вывод 
+                                            //запроса на работу без внесения изменений
+                 Origin,           //Тип текстового файла 
+                 Delimiter,        //Разделитель при Format = 6
+                 Editable,         //Используется только для надстроек Excel 4.0
+                 Notify,           //При значении true имя файла добавляется в 
+                                   //список нотификации файлов
+                 Converter,        //Используется для передачи индекса конвертера файла
+                                   //используемого для открытия файла    
+                 AddToMRU          //При true имя файла добавляется в список 
+                                   //открытых файлов
+                                 ) 
+            */
+            var excelappworkbook = excelapp.Workbooks.Open(Filename: path, ReadOnly: true);
+            // Получаем его листы
+            var excelsheets = excelappworkbook.Worksheets;
+            // Получаем ссылку на лист
+             var excelworksheet = (Excel.Worksheet)excelsheets.get_Item(sheetname);
+
+            return excelworksheet;
         }
 
-        /*
-         Workbook_object.Open(
-             FileName,         //Имя открываемого файла файла
-             UpdateLinks,      //Способ обновления ссылок в файле
-             ReadOnly,         //При значении true открытие только для чтения 
-             Format,           //Определение формата символа разделителя
-             Password,         //Пароль доступа к файлу до 15 символов
-             WriteResPassword, //Пароль на сохранение файла
-             IgnoreReadOnlyRecommended, //При значении true отключается вывод 
-                                        //запроса на работу без внесения изменений
-             Origin,           //Тип текстового файла 
-             Delimiter,        //Разделитель при Format = 6
-             Editable,         //Используется только для надстроек Excel 4.0
-             Notify,           //При значении true имя файла добавляется в 
-                               //список нотификации файлов
-             Converter,        //Используется для передачи индекса конвертера файла
-                               //используемого для открытия файла    
-             AddToMRU          //При true имя файла добавляется в список 
-                               //открытых файлов
-) 
-        */
+
 
 
     }
