@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestData", "TestData\TestData.csproj", "{80CAC872-E658-455F-9934-1E86AF19C476}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDataEnv", "ExcelDataEnv\ExcelDataEnv.csproj", "{8F48149B-36B3-4D44-B806-862DFAA26B95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80CAC872-E658-455F-9934-1E86AF19C476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80CAC872-E658-455F-9934-1E86AF19C476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80CAC872-E658-455F-9934-1E86AF19C476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80CAC872-E658-455F-9934-1E86AF19C476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F48149B-36B3-4D44-B806-862DFAA26B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F48149B-36B3-4D44-B806-862DFAA26B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F48149B-36B3-4D44-B806-862DFAA26B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F48149B-36B3-4D44-B806-862DFAA26B95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7D35892-F159-4689-B2D3-A6810DDA0FCE}
+	EndGlobalSection
+EndGlobal
