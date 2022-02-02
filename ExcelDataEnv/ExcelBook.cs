@@ -24,19 +24,33 @@ namespace ExcelData
         // Реализация - получить список типа List<Group> из данных листа
         public static List<Group> GetListDataBoard (string nameBlockDef, List<string> nameAttributes)
         {
-             Excel.Application excelapp;
-             Excel.Window excelWindow;
-            excelapp = new Excel.Application();
-            excelapp.Visible = true;
-
             // атрибут
             AttrData attr;
-
             // Группа с атрибутами
             Group gr;
-
             // Список групп с атрибутами
             List<Group> listGr=new List<Group>();
+            
+            // 2. Получаем ссылку на лист 
+            Excel.Worksheet excelworksheet = GetExcelSheet(Const.FileXlsName, Const.ExcelWorksheet);
+
+            // 3. Получим массив 50*50 значений  от А1, поищем там ячейку с текстом "Блок"
+            int x1 = 50; int y1 = 50; string range1 = "A1";
+                        var ArrForBlock = GetArrayBasedCell(excelworksheet, x1, y1, range1);
+            for (int i = 0; i < x1; i++)
+            {
+                for (int j = 0; j < y1; j++)
+                {
+                    // Console.Write(Arr[i, j].ToString() + " ");
+                    if (ArrForBlock[i,j]=="Блок")
+                    {
+                        // кортеж с данными (строка, столбец) , где сидит слово "Блок"
+                        var rangeBlock = (i, j); // столбец, в кот. будут имена блоков найден
+                        break;
+                    }
+                }
+            }
+
 
             /*
              * 1. Получить объект-книгу Excel
@@ -91,7 +105,7 @@ namespace ExcelData
         /// <param name="path">Путь к файлу Excel</param>
         /// <param name="sheetname">Назв. листа</param>
         /// <returns></returns>
-        public static  Excel.Worksheet GetExcelSheet(string path, string sheetname)
+        public static  Excel.Worksheet GetExcelSheet( string path, string sheetname)
         {
             // получаем объект Excel
             Excel.Application excelapp = new Excel.Application();
@@ -128,7 +142,39 @@ namespace ExcelData
             return excelworksheet;
         }
 
+        /// <summary>
+        /// Возращает массив из  х строк у столбцов от ячейки
+        /// </summary>
+        /// <param name="x">строк [x,y]</param>
+        /// <param name="y">столбцов [x,y]</param>
+        /// <param name="range">назв. ячейки от которой отсчитывать строки вправо, стролбцы вниз</param>
+        /// <returns></returns>
+        public static string [,] GetArrayBasedCell (Excel.Worksheet excelworksheet, int x, int y, string range)
+        {
+            //ExcelBook.GetArrayBasedCell(ExcelBook.GetExcelSheet(Const.FileXlsName, Const.ExcelWorksheet), 10, 2, "C16");
+            // переменнная массива
+            string[,] ArrayData= new string[x, y];
 
+            int rangeX= (int)excelworksheet.get_Range(range).Row; 
+            int rangeY= (int)excelworksheet.get_Range(range).Column ;
+
+            // возьмем строки
+            for (int i = 0; i < x; i++)
+            {
+                // столбцы
+                for (int j = 0; j < y; j++)
+                {
+                    var excelcells = (Excel.Range)excelworksheet.Cells[rangeX + i, rangeY + j];
+                    ArrayData[i, j] = excelcells.Value2;
+                    // excelworksheet.get_Range("B4", Type.Missing);
+                    //// excelcells = (Excel.Range)excelworksheet.Cells[i + 1, 1];
+                    ////excelcells.Value2 = excelapp.RecentFiles[i + 1].Name;
+                }
+
+            }
+
+            return ArrayData ?? null;
+        }
 
 
     }
