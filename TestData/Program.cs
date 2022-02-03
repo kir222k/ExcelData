@@ -5,16 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using ExcelData;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Diagnostics;
 
 namespace TestData
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             //Metod1(); // через COM
             Metod2EpPlus();
             //Metod3TestDial();
+
+            sw.Stop();
+
+            //var sa = sw.Elapsed;
+            Console.WriteLine($"\nВремя выполнения:\n=>" +
+                $"\n{sw.Elapsed} секунд   " +
+                $"{sw.ElapsedMilliseconds} миллисекунд");
+            Console.WriteLine("\nДля выхода нажмите");
         }
 
         static void Metod2EpPlus()
@@ -22,10 +34,26 @@ namespace TestData
             EpPlusExcel ED = new EpPlusExcel();
             //hrow new NotImplementedException();
 
-            string str = ED.GetDataExel();
+            string[,] strTable = ED.GetDataExel();
 
-            Console.WriteLine(str);
-            Console.ReadLine();
+            //Console.WriteLine(strTable);
+
+            int rows = strTable.GetUpperBound(0) + 1;    // количество строк
+            int columns = strTable.GetUpperBound(1) + 1;// strTable.Length / rows;        // количество столбцов
+
+            for (int i = 0; i < rows - 1; i++)
+            {
+                for (int j = 0; j < columns - 1; j++)
+                {
+                    Console.Write(strTable[i, j].ToString() + " ");
+                }
+                Console.WriteLine("\n");
+            }
+
+            //Console.WriteLine("\n\n\n\n*****************************");
+
+                     Console.WriteLine($"Строк={rows}  Столбцов={columns}");
+            //Console.ReadLine();
 
 
         }

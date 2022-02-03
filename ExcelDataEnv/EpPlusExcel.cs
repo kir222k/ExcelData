@@ -14,11 +14,7 @@ namespace ExcelData
 {
     public class EpPlusExcel
     {
-        private string[,] exceTable;
-        private int totalRows = 0;
-        private int totalColumns = 0;
-
-        public string GetDataExel()
+        public string [,] GetDataExel()
         {
             try
             {
@@ -34,7 +30,6 @@ namespace ExcelData
                 if (File.Exists(Const.FileXlsName))
                 {
 
-                
                 ExcelPackage excelFile = new ExcelPackage(
                         new FileInfo(Const.FileXlsName));
 #endif
@@ -43,43 +38,44 @@ namespace ExcelData
                             excelFile.Workbook.
                             Worksheets[Const.ExcelWorksheet];
 
-                    totalRows = worksheet.Dimension.End.Row;
-                    totalColumns = worksheet.Dimension.End.Column;
+                    int totalRows = worksheet.Dimension.End.Row;
+                    int totalColumns =  worksheet.Dimension.End.Column;
 
-                    exceTable = new string[totalRows, totalColumns];
+                    string [,] excelTable = new string[totalRows, totalColumns];
 
-                    for (int rowIndex = 1; rowIndex <= totalRows; rowIndex++)
+                    for (int i = 0; i < totalRows - 1; i++)
                     {
-                        IEnumerable<string>  row =
-                            worksheet.Cells[rowIndex, 1, rowIndex, totalColumns].
-                            Select(c => c.Value == null ? string.Empty : c.Value.ToString());
-
-                        List<string> list = row.ToList<string>();
-
-                        for (int i = 0; i < list.Count; i++)
+                        for (int j = 0; j < totalColumns - 1; j++)
                         {
-                            exceTable[rowIndex - 1, i] =
-                                Convert.ToString(list[i].Replace(".", ","));
+                            if (worksheet.Cells[i+1, j+1].Value != null)
+                            {
+                                excelTable[i, j] = Convert.ToString(worksheet.Cells[i+1, j+1].Value);
+                            }
+                            else
+                            {
+                                excelTable[i, j] = Const.NullTextReplace;
+                            }
                         }
-
-
                     }
 
-
-                    return null; //worksheet.Name.ToString();
+                    return excelTable; //worksheet.Name.ToString();
                 }
-
-                
                 else
                 {
-                    //throw new Exception("Файл не выбран!");
-                    return "Файл не выбран!";
+#if !DEBUG
+                    throw new Exception("Файл не выбран!");
+#else
+                   return null;
+#endif
                 }
             }
+
             catch (Exception e)
             {
-                return e.Message.ToString();
-                //throw;
+#if DEBUG
+                throw;
+#endif
+                return null;
             }
         }
 

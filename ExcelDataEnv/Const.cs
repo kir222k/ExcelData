@@ -9,7 +9,8 @@ namespace ExcelData
 {
     public static class Const
     {
-        public static string FileXlsName = "u:\\dev\\ExcelConnect\\_Test\\ВРУ_ТРН.xlsx";
+        //public static string FileXlsName = "u:\\dev\\ExcelConnect\\_Test\\ВРУ_ТРН.xlsx";
+        public static string FileXlsName = "u:\\dev\\ExcelConnect\\_Test\\ArraTest2.xlsx";
         public static string ExcelWorksheet = "Расчет";
 
         // 
@@ -17,5 +18,7 @@ namespace ExcelData
             "N.АПП1",
             "НАИМЕНОВАНИЕ.НАГРУЗКИ",
             "УЧАСТОК"};
+
+        public static string NullTextReplace = "<emp>";
     }
 }
