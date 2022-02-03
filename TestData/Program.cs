@@ -54,12 +54,18 @@ namespace TestData
                 Console.WriteLine("\n");
             }
 
-            //Console.WriteLine("\n\n\n\n*****************************");
-
-                     Console.WriteLine($"Строк={rows}  Столбцов={columns}");
-            //Console.ReadLine();
+             Console.WriteLine($"Строк={rows}  Столбцов={columns}");
 
 
+
+
+            var PP = new PullPushData(strTable);
+            var sPP = PP.GetExcelCellBlockText();
+
+            Console.WriteLine("\nБлок тут: " + sPP.TextValue + "\nСтрока: " + sPP.RowCell + 
+                "\nСтолбец: " + sPP.ColumnCell);
+
+            Console.WriteLine(PP.ToString());
         }
 
         // работает очень медленно

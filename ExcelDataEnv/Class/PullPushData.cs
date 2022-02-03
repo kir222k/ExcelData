@@ -9,51 +9,59 @@ namespace ExcelData
 {
     public class PullPushData: IPullPushData
     {
-        //public void DataToAcad()
-        //{
-        //    DataExcel ED = new DataExcel();
-        //    string[,] strTable = ED.GetDataExel();
-        //}
-
-        private string fileExcelName;
-        private string sheetExcelName;
-
+        // private string fileExcelName;
+        // private string sheetExcelName;
+        private string[,] strTable;
 
         // Конструктор - создание листа Excel из файла библиотекой EPPlus
-        public PullPushData (string fileExcelName, string sheetExcelName)
+        public PullPushData (string[,] strTable)  //, string fileExcelName, string sheetExcelName)
         {
-            this.fileExcelName = fileExcelName;
-            this.sheetExcelName = sheetExcelName;
+            // this.fileExcelName = fileExcelName;
+            // this.sheetExcelName = sheetExcelName;
+            this.strTable = strTable;
+        }
+
+        public PullPushData() { }
+
+        // Блок.
+        public ExcelRangeText GetExcelCellBlockText()
+        {
+            //throw new NotImplementedException();
+
+            return new ExcelRangeText { TextValue = "Тута", ColumnCell = 1, RowCell = 2 };
         }
 
         // Атрибут.
-        ExcelRangeText IPullPushData.GetExcelCellAttributeText()
+        public ExcelRangeText GetExcelCellAttributeText()
         {
             throw new NotImplementedException();
         }
 
-        // Блок.
-        ExcelRangeText IPullPushData.GetExcelCellBlockText()
-        {
-            throw new NotImplementedException();
-        }
 
         // Список блоков.
-        List<ExcelRangeText> IPullPushData.GetExcelRangeBlock()
+        public List<ExcelRangeText> GetExcelRangeBlock()
         {
             throw new NotImplementedException();
         }
 
         // Список атр.
-        List<ExcelRangeText> IPullPushData.GetExcelRangeAttribute()
+        public List<ExcelRangeText> GetExcelRangeAttribute()
         {
             throw new NotImplementedException();
         }
 
         // Список данных для выгрузки.
-        List<BlockData> IPullPushData.GetListBlockDataToPush()
+        public  List<BlockData> GetListBlockDataToPush()
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return "PullPushData!!";
+
+        }
+
+
     }
 }
