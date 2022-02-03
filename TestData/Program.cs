@@ -16,19 +16,22 @@ namespace TestData
             var sw = new Stopwatch();
             sw.Start();
 
-            //Metod1(); // через COM
-            Metod2EpPlus();
-            //Metod3TestDial();
-
+           // Metod2EpPlus();
+           
             sw.Stop();
 
-            //var sa = sw.Elapsed;
             Console.WriteLine($"\nВремя выполнения:\n=>" +
                 $"\n{sw.Elapsed} секунд   " +
                 $"{sw.ElapsedMilliseconds} миллисекунд");
             Console.WriteLine("\nДля выхода нажмите");
         }
 
+
+
+
+
+
+        //работает мега быстро
         static void Metod2EpPlus()
         {
             EpPlusExcel ED = new EpPlusExcel();
@@ -58,9 +61,9 @@ namespace TestData
 
         }
 
-
-        #region DONE
         // работает очень медленно
+        #region Metod1
+        /*
         static void Metod1 ()
         {
             try
@@ -89,29 +92,29 @@ namespace TestData
                 }
                 // ws.Application.Quit();
 
-                /*
+                
 
-                // 3. Получим массив 50*50 значений  от А1, поищем там ячейку с текстом "Блок"
-                int x1 = x; int y1 = y; string range1 = range;
-                //ws = InteropLinktoExcel.GetExcelSheet(Const.FileXlsName, Const.ExcelWorksheet);
-                //var ArrForBlock = InteropLinktoExcel.GetArrayBasedCell(ws, x1, y1, range1);
-                var ArrForBlock = Arr;
-                for (int i = 0; i < x1; i++)
-                {
-                    for (int j = 0; j < y1; j++)
-                    {
-                        // Console.Write(Arr[i, j].ToString() + " ");
-                        if (ArrForBlock[i, j] == "Блок")
-                        {
-                            // кортеж с данными (строка, столбец) , где сидит слово "Блок"
-                            var rangeBlock = (i, j); // столбец, в кот. будут имена блоков найден
-                            Console.WriteLine("\nСЛОВО: Блок =>" + "Строка: "  + rangeBlock.i + " Столбец: " + rangeBlock.j);
-                            //Console.WriteLine("\nСЛОВО: Блок =>" +  ws.Range();
-                            break;
-                        }
-                    }
-                }
-                */
+                //// 3. Получим массив 50*50 значений  от А1, поищем там ячейку с текстом "Блок"
+                //int x1 = x; int y1 = y; string range1 = range;
+                ////ws = InteropLinktoExcel.GetExcelSheet(Const.FileXlsName, Const.ExcelWorksheet);
+                ////var ArrForBlock = InteropLinktoExcel.GetArrayBasedCell(ws, x1, y1, range1);
+                //var ArrForBlock = Arr;
+                //for (int i = 0; i < x1; i++)
+                //{
+                //    for (int j = 0; j < y1; j++)
+                //    {
+                //        // Console.Write(Arr[i, j].ToString() + " ");
+                //        if (ArrForBlock[i, j] == "Блок")
+                //        {
+                //            // кортеж с данными (строка, столбец) , где сидит слово "Блок"
+                //            var rangeBlock = (i, j); // столбец, в кот. будут имена блоков найден
+                //            Console.WriteLine("\nСЛОВО: Блок =>" + "Строка: "  + rangeBlock.i + " Столбец: " + rangeBlock.j);
+                //            //Console.WriteLine("\nСЛОВО: Блок =>" +  ws.Range();
+                //            break;
+                //        }
+                //    }
+                //}
+                
 
                 // ws.Application.Quit();
 
@@ -124,7 +127,9 @@ namespace TestData
                 throw;
             }
         }
-   
+        */
+        #endregion
+
         // работает из под КАД
         static void Metod3TestDial()
         {
@@ -132,7 +137,5 @@ namespace TestData
             ed.TestDial();
 
         }
-
-        #endregion
     }
 }
