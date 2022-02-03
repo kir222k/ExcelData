@@ -10,10 +10,22 @@ using System.Windows.Forms;
 
 //#error version
 
-namespace ExcelData
+namespace ExcelData.Class
 {
-    public class EpPlusExcel
+    public class DataExcel
     {
+
+        private string fileExcelName;
+        private string sheetExcelName;
+
+        public DataExcel (string fileExcelName, string sheetExcelName)
+        {
+            this.fileExcelName = fileExcelName;
+            this.sheetExcelName = sheetExcelName;
+        }
+
+        public DataExcel() { }
+
         public string [,] GetDataExel()
         {
             try
@@ -26,17 +38,27 @@ namespace ExcelData
                 {
                     ExcelPackage excelFile = new ExcelPackage(
                         new FileInfo(dialog.FileName));
+
+                    // спросим имя листа
+                    using (Prompt prompt = new Prompt("Название листа EXCEL", "ВВЕДИТЕ ДАННЫЕ"))
+                    {
+                        sheetExcelName = prompt.Result;
+                    }
 #else
-                if (File.Exists(Const.FileXlsName))
+
+                //fileExcelName= Const.FileXlsName;
+                if (File.Exists(fileExcelName))
                 {
 
                 ExcelPackage excelFile = new ExcelPackage(
-                        new FileInfo(Const.FileXlsName));
+                        new FileInfo(fileExcelName));
 #endif
+
+
 
                     ExcelWorksheet worksheet =
                             excelFile.Workbook.
-                            Worksheets[Const.ExcelWorksheet];
+                            Worksheets[sheetExcelName];
 
                     int totalRows = worksheet.Dimension.End.Row;
                     int totalColumns =  worksheet.Dimension.End.Column;

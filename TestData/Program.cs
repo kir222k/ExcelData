@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ExcelData;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
+using ExcelData.Class;
 
 namespace TestData
 {
@@ -16,7 +17,7 @@ namespace TestData
             var sw = new Stopwatch();
             sw.Start();
 
-           // Metod2EpPlus();
+            Metod2EpPlus();
            
             sw.Stop();
 
@@ -34,8 +35,8 @@ namespace TestData
         //работает мега быстро
         static void Metod2EpPlus()
         {
-            EpPlusExcel ED = new EpPlusExcel();
-            //hrow new NotImplementedException();
+            DataExcel ED = new DataExcel(Const.FileXlsName, Const.ExcelWorksheet);
+            //DataExcel ED = new DataExcel();
 
             string[,] strTable = ED.GetDataExel();
 
@@ -133,7 +134,7 @@ namespace TestData
         // работает из под КАД
         static void Metod3TestDial()
         {
-            var ed = new EpPlusExcel();
+            var ed = new DataExcel();
             ed.TestDial();
 
         }

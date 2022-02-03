@@ -9,6 +9,7 @@ using System.Reflection;
 using Autodesk.Windows;
 using acadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using ExcelData;
+using ExcelData.Class;
 
 [assembly: CommandClass(typeof(AcadInc.DialCreateSet))]
 
@@ -57,8 +58,14 @@ namespace AcadInc
         [CommandMethod("eOpenDial")]
         public static void OpenDial()
         {
-            var ed = new EpPlusExcel();
-            ed.TestDial();
+            DataExcel ED = new DataExcel();
+
+            string[,] strTable = ED.GetDataExel();
+
+            int rows = strTable.GetUpperBound(0) + 1;    // количество строк
+            int columns = strTable.GetUpperBound(1) + 1;// strTable.Length / rows;        // количество столбцов
+
+            Console.WriteLine($"Строк={rows}  Столбцов={columns}");
         }
 
     }
