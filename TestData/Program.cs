@@ -28,10 +28,6 @@ namespace TestData
         }
 
 
-
-
-
-
         //работает мега быстро
         static void Metod2EpPlus()
         {
@@ -54,17 +50,11 @@ namespace TestData
                 Console.WriteLine("\n");
             }
 
-             Console.WriteLine($"Строк={rows}  Столбцов={columns}");
-
-
-
+            Console.WriteLine($"Строк={rows}  Столбцов={columns}");
 
             var PP = new PullPushData(strTable);
-            //var sPP = PP.GetExcelCellBlockText("ss");
 
             var sPP = PP.GetExcelRangeBlock();
-            //Console.WriteLine("\nБлок тут: " + sPP.TextValue + "\nСтрока: " + sPP.RowCell +
-            //    "\nСтолбец: " + sPP.ColumnCell);
 
             string str = "";
             foreach (var blData in sPP)
@@ -76,11 +66,8 @@ namespace TestData
                 Console.WriteLine(str);
             }
 
-
-
             // Console.WriteLine(PP.ToString());
             // Console.WriteLine(PP.GetListBlockDataToPush().ToString());
-
         }
 
         // работает очень медленно
