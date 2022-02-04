@@ -65,7 +65,7 @@ namespace ExcelData.Class
             var listBlocks = new List<ExcelRangeText>();
             // Ищем "[Блок]" и координаты ячеки с этим текстом.
             //if (excelCellBlockText == null)
-            excelCellBlockText = SearchValueInArray.GetCellCoordinatesInArray("[Блок]", strTable);
+            excelCellBlockText = SearchValueInArray.GetCellCoordinatesInArray(Const.ExcelTextCellAsBblock, strTable);
 
             int rows = strTable.GetUpperBound(0) + 1;    // количество строк
             //int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
@@ -73,7 +73,11 @@ namespace ExcelData.Class
             int j = excelCellBlockText.ColumnCell;
             for (int i = 0; i < rows - 1; i++)
             {
-                if ( (strTable[i, j] != "") && (strTable[i, j] != Const.NullTextReplace))
+                if ( (strTable[i, j] != "") && 
+                        (strTable[i, j] != Const.NullTextReplace) &&
+                        (strTable[i, j] != Const.ExcelTextCellAsBblock)&&
+                        (strTable[i, j] != Const.ExcelTextCellAsAttribut)
+                    )
                 {
                     listBlocks.Add(new ExcelRangeText
                     {
@@ -92,7 +96,7 @@ namespace ExcelData.Class
         public List<ExcelRangeText> GetExcelRangeAttribute()
         {
             // Ищем "[Атрибут]"
-            excelCellAttributeText = SearchValueInArray.GetCellCoordinatesInArray("[Атрибут]", strTable);
+            excelCellAttributeText = SearchValueInArray.GetCellCoordinatesInArray(Const.ExcelTextCellAsAttribut, strTable);
 
             throw new NotImplementedException();
         }

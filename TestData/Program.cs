@@ -7,6 +7,7 @@ using ExcelData;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
 using ExcelData.Class;
+using ExcelData.Sys;
 
 namespace TestData
 {
@@ -24,7 +25,7 @@ namespace TestData
             Console.WriteLine($"\nВремя выполнения:\n=>" +
                 $"\n{sw.Elapsed} секунд   " +
                 $"{sw.ElapsedMilliseconds} миллисекунд");
-            Console.WriteLine("\nДля выхода нажмите");
+            Console.WriteLine("\nДля выхода нажмите зю");
         }
 
 
@@ -32,31 +33,25 @@ namespace TestData
         static void Metod2EpPlus()
         {
             DataExcel ED = new DataExcel(Const.FileXlsName, Const.ExcelWorksheet);
-            //DataExcel ED = new DataExcel();
-
             string[,] strTable = ED.GetDataExel();
-
-            //Console.WriteLine(strTable);
 
             int rows = strTable.GetUpperBound(0) + 1;    // количество строк
             int columns = strTable.GetUpperBound(1) + 1;// strTable.Length / rows;        // количество столбцов
 
-            for (int i = 0; i < rows - 1; i++)
-            {
-                for (int j = 0; j < columns - 1; j++)
-                {
-                    Console.Write(strTable[i, j].ToString() + " ");
-                }
-                Console.WriteLine("\n");
-            }
-
-            Console.WriteLine($"Строк={rows}  Столбцов={columns}");
+            //for (int i = 0; i < rows - 1; i++)
+            //{
+            //    for (int j = 0; j < columns - 1; j++)
+            //    {
+            //        Console.Write(strTable[i, j].ToString() + " ");
+            //    }
+            //    Console.WriteLine("\n");
+            //}
 
             var PP = new PullPushData(strTable);
-
             var sPP = PP.GetExcelRangeBlock();
 
             string str = "";
+            LogEasy.DeleteFileLog(Const.LogFileName);
             foreach (var blData in sPP)
             {
                 str += "\n\nБлок: " + blData.TextValue;
@@ -64,10 +59,14 @@ namespace TestData
                 str += "\nСтрока= " + blData.RowCell + "\nСтолбец= " + blData.ColumnCell;
 
                 Console.WriteLine(str);
+
+                LogEasy.WriteLog(str, Const.LogFileName);
             }
 
-            // Console.WriteLine(PP.ToString());
-            // Console.WriteLine(PP.GetListBlockDataToPush().ToString());
+            Console.WriteLine($"Строк={rows}  Столбцов={columns}");
+
+          //  string eventThis = "LogTestErr " + e.Message.ToString();
+
         }
 
         // работает очень медленно
