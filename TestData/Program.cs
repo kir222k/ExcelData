@@ -60,13 +60,27 @@ namespace TestData
 
 
             var PP = new PullPushData(strTable);
-            var sPP = PP.GetExcelCellBlockText();
+            //var sPP = PP.GetExcelCellBlockText("ss");
 
-            Console.WriteLine("\nБлок тут: " + sPP.TextValue + "\nСтрока: " + sPP.RowCell + 
-                "\nСтолбец: " + sPP.ColumnCell);
+            var sPP = PP.GetExcelRangeBlock();
+            //Console.WriteLine("\nБлок тут: " + sPP.TextValue + "\nСтрока: " + sPP.RowCell +
+            //    "\nСтолбец: " + sPP.ColumnCell);
 
-            Console.WriteLine(PP.ToString());
+            string str = "";
+            foreach (var blData in sPP)
+            {
+                str += "\n\nБлок: " + blData.TextValue;
+                str += "\nКоординаты_ячейки=> ";
+                str += "\nСтрока= " + blData.RowCell + "\nСтолбец= " + blData.ColumnCell;
+
+                Console.WriteLine(str);
+            }
+
+
+
+            // Console.WriteLine(PP.ToString());
             // Console.WriteLine(PP.GetListBlockDataToPush().ToString());
+
         }
 
         // работает очень медленно

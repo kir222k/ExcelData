@@ -5,15 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using ExcelData.Model;
 
-namespace ExcelData
+namespace ExcelData.Class
 {
     public class PullPushData: IPullPushData
     {
-        // private string fileExcelName;
-        // private string sheetExcelName;
         private string[,] strTable;
+        private ExcelRangeText excelCellBlockText;
+        private ExcelRangeText excelCellAttributeText;
 
-        // Конструктор - создание листа Excel из файла библиотекой EPPlus
+        #region КОНСТРУКТОРЫ
+        /// <summary>
+        /// Конструктор - передаем  лист Excel, созданный из  файла ТРН библиотекой EPPlus.
+        /// </summary>
+        /// <param name="strTable"> Лист Excel в виде 2мерн. массива.</param>
         public PullPushData (string[,] strTable)  //, string fileExcelName, string sheetExcelName)
         {
             // this.fileExcelName = fileExcelName;
@@ -21,37 +25,95 @@ namespace ExcelData
             this.strTable = strTable;
         }
 
+        /// <summary>
+        /// Конструктор без арг.
+        /// </summary>
         public PullPushData() { }
+        #endregion
 
-        // Блок.
+        /*
+        /// <summary>
+        /// Ищем "[Блок]"
+        /// </summary>
+        /// <returns>Зн.ячейки с ее координатами.</returns>
         public ExcelRangeText GetExcelCellBlockText()
         {
-            //throw new NotImplementedException();
+            ExcelRangeText? eT = null;
 
-            return new ExcelRangeText { TextValue = "Тута", ColumnCell = 1, RowCell = 2 };
+
+
+            return (ExcelRangeText)eT;
+
+            //Nullable<ExcelRangeText> eT=null;
+            //throw new NotImplementedException();
+            //return new ExcelRangeText { TextValue = "Тута", ColumnCell = 1, RowCell = 2 };
         }
 
-        // Атрибут.
+        /// <summary>
+        /// Ищем "[Атрибут]"
+        /// </summary>
+        /// <returns>Зн.ячейки с ее координатами.</returns>
         public ExcelRangeText GetExcelCellAttributeText()
         {
             throw new NotImplementedException();
         }
-
+        */
 
         // Список блоков.
         public List<ExcelRangeText> GetExcelRangeBlock()
         {
-            throw new NotImplementedException();
+            var listBlocks = new List<ExcelRangeText>();
+            // Ищем "[Блок]" и координаты ячеки с этим текстом.
+            //if (excelCellBlockText == null)
+            excelCellBlockText = SearchValueInArray.GetCellCoordinatesInArray("[Блок]", strTable);
+
+            int rows = strTable.GetUpperBound(0) + 1;    // количество строк
+            //int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
+            // берем массив и ищем в слолбце excelCellBlockText.ColumnCell
+            int j = excelCellBlockText.ColumnCell;
+            for (int i = 0; i < rows - 1; i++)
+            {
+                if ( (strTable[i, j] != "") && (strTable[i, j] != Const.NullTextReplace))
+                {
+                    listBlocks.Add(new ExcelRangeText
+                    {
+                        TextValue = strTable[i, j],
+                        RowCell = i,
+                        ColumnCell=j
+                    }) ;
+                }
+            }
+
+            return listBlocks;
+            // throw new NotImplementedException();
         }
 
         // Список атр.
         public List<ExcelRangeText> GetExcelRangeAttribute()
         {
+            // Ищем "[Атрибут]"
+            excelCellAttributeText = SearchValueInArray.GetCellCoordinatesInArray("[Атрибут]", strTable);
+
             throw new NotImplementedException();
         }
 
-        // Список данных для выгрузки.
+        // Список данных для выгрузки. Рабочий метод!
         public List<BlockData> GetListBlockDataToPush()
+        {
+
+
+
+            throw new NotImplementedException();
+        }
+
+
+        #region ToString Override!
+        /// <summary>
+        /// Список данных для выгрузки. Тест!!
+        /// </summary>
+        /// <param name="ss">Липовый параметр, стобы перегрузить основной метод</param>
+        /// <returns>Заранее заданный список, используется в ToString!</returns>
+        public List<BlockData> GetListBlockDataToPush(string ss)
         {
             //throw new NotImplementedException();
 
@@ -81,11 +143,15 @@ namespace ExcelData
             };
         }
 
+        /// <summary>
+        /// переопределим ToString.
+        /// </summary>
+        /// <returns>результат, т.е. то , что будет передаваться в акад.</returns>
         public override string ToString()
         {
             string  str="";
 
-            foreach (var BlData in GetListBlockDataToPush())
+            foreach (var BlData in GetListBlockDataToPush("ss"))
             {
                 str += "\n\nБлок: " + BlData.BlockName;
                 str += "\nАтрибуты=>";
@@ -102,7 +168,7 @@ namespace ExcelData
             return str;
 
         }
-
+        #endregion
 
     }
 }

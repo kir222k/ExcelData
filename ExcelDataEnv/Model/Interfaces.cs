@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 namespace ExcelData.Model
 {
     interface IPullPushData
+
     {
         /// <summary>
         /// найдем тескт   "Блок" на листе Excel.
         /// </summary>
         /// <returns>значение типа ExcelRangeText</returns>
-        ExcelRangeText GetExcelCellBlockText();
+       // ExcelRangeText GetExcelCellBlockText();
 
         /// <summary>
         /// найдем тескт   "Блок" на листе Excel.
         /// </summary>
         /// <returns>значение типа ExcelRangeText</returns>
-        ExcelRangeText GetExcelCellAttributeText();
+       // ExcelRangeText GetExcelCellAttributeText();
 
         /// <summary>
         /// пойдем в столбце "Блок"а от "Блок"а вниз до 1го имени блока.

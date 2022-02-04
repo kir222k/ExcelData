@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\DialogSheetName.cs" />
+    <Compile Include="Class\SearchValueInArray.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Model\Structures.cs" />
     <Compile Include="Class\PullPushData.cs" />
