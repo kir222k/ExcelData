@@ -66,6 +66,7 @@ namespace TestData
                 "\nСтолбец: " + sPP.ColumnCell);
 
             Console.WriteLine(PP.ToString());
+            // Console.WriteLine(PP.GetListBlockDataToPush().ToString());
         }
 
         // работает очень медленно

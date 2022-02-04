@@ -51,14 +51,55 @@ namespace ExcelData
         }
 
         // Список данных для выгрузки.
-        public  List<BlockData> GetListBlockDataToPush()
+        public List<BlockData> GetListBlockDataToPush()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
+            return new List<BlockData>
+            {
+                new BlockData
+                {BlockName="Line_load3", ListAttributes=
+                    new List<AttrData>
+                    {
+                        new AttrData {AttributeTag="НАИМЕНОВАНИЕ.НАГРУЗКИ", 
+                            AttributeValue="Квартирный стояк N1.1 (секция 3)"},
+                        new AttrData {AttributeTag="N.АПП1", AttributeValue="QF1"},
+                        new AttrData {AttributeTag="УЧАСТОК", AttributeValue="1"}
+                    }
+                },
+                new BlockData
+                {BlockName="Line_load3", ListAttributes=
+                    new List<AttrData>
+                    {
+                        new AttrData {AttributeTag="НАИМЕНОВАНИЕ.НАГРУЗКИ", 
+                            AttributeValue="Квартирный стояк N1.2 (секция 3)"},
+                        new AttrData {AttributeTag="N.АПП1", AttributeValue="QF2"},
+                        new AttrData {AttributeTag="УЧАСТОК", AttributeValue="1"}
+                    }
+                }
+
+            };
         }
 
         public override string ToString()
         {
-            return "PullPushData!!";
+            string  str="";
+
+            foreach (var BlData in GetListBlockDataToPush())
+            {
+                str += "\n\nБлок: " + BlData.BlockName;
+                str += "\nАтрибуты=>";
+                int it = 1;
+                foreach (var attrs in BlData.ListAttributes)
+                {
+                    str += "\n" + it.ToString() + ":";
+                    str +=  "\nAttributeTag: "   + attrs.AttributeTag + 
+                            "\nAttributeValue: "  + attrs.AttributeValue;
+                    it++;
+                }
+            }
+
+            return str;
 
         }
 
