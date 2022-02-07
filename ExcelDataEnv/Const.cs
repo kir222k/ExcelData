@@ -28,7 +28,8 @@ namespace ExcelData
         public static string ExcelTextCellAsBblock = "[Блок]";
         public static string ExcelTextCellAsAttribute = "[Атрибут]";
 
-        public static string BlockAttrApparatTag = "N.АПП1";
+        public static string BlockAttrApparatQF = "N.АПП1";
+        public static string BlockAttrApparatSect = "УЧАСТОК";
     }
 
   

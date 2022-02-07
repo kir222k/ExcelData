@@ -13,30 +13,30 @@ using Autodesk.Windows;
 using acadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using ExcelData;
 using ExcelData.Class;
+using ExcelData.Model;
 
 [assembly: CommandClass(typeof(AcadInc.BlockData))]
 
 
 namespace AcadInc
 {
-    public class BlockData
+    public static class BlockData
     {
 
         // https://www.theswamp.org/index.php?topic=55238.0
-        [CommandMethod("selb")]
-        public void GetBlocksRefs()
+        //[CommandMethod("selb")]
+        public static void BlockRefModifity(List<ExcelData.Model.BlockData> blockDatas)
         {
             AcadSendMess AcMess = new AcadSendMess();
 
             foreach (ObjectId blockRefId in selectDynamicBlockReferences())
             {
-                
-                    AcMess.SendStringDebug(ReadBlock(blockRefId));
+                    AcMess.SendStringDebug(BlockRefAttributeRefWrite(blockRefId, blockDatas) );
             }
         }
 
 
-        public string  ReadBlock(ObjectId bed)
+        public static string BlockRefAttributeRefWrite(ObjectId bed, List<ExcelData.Model.BlockData> blockDatas)
         {
             Database db = Application.DocumentManager.MdiActiveDocument.Database;
 
@@ -47,40 +47,62 @@ namespace AcadInc
 
                 BlockReference bref = (BlockReference)rbTrans.GetObject(bed, OpenMode.ForWrite);
                 BlockTableRecord bdef = (BlockTableRecord)rbTrans.GetObject(bref.DynamicBlockTableRecord, OpenMode.ForWrite);
-                if (bdef.HasAttributeDefinitions != true) return null;
-                foreach (ObjectId id in bref.AttributeCollection)
-                {
-                    AttributeReference attref = (AttributeReference)rbTrans.GetObject(id, OpenMode.ForWrite);
-                    //switch (attref.Tag)
-                    //{
-                    //    case "pos_Origin_Z":
-                    //        structure.insPtZ = attref.TextString;
-                    //        break;
-                    //    case "pos_Endpoint_Z":
-                    //        structure.endPtZ = attref.TextString;
-                    //        break;
-                    //    case "prd_UL":
-                    //        structure.uLabel = attref.TextString;
-                    //        break;
-                    //    case "prd_LP":
-                    //        structure.layPos = attref.TextString;
-                    //        break;
-                    //}
 
-                    if (attref.Tag ==  Const.BlockAttrApparatTag)
+                foreach (ExcelData.Model.BlockData blockData in blockDatas)
+                {
+                    if (bdef.Name == blockData.BlockName)
                     {
-                        //result = attref.Tag;
-                        attref.TextString = "Я тута!";
+
+                        if (bdef.HasAttributeDefinitions == true)
+                        {
+
+                            foreach (ObjectId id in bref.AttributeCollection)
+                            {
+                                AttributeReference attref = (AttributeReference)rbTrans.GetObject(id, OpenMode.ForWrite);
+
+                                //if (attref.Tag ==  Const.BlockAttrApparatTag)
+                                //{
+                                //    //result = attref.Tag;
+                                //    //attref.TextString = "Я тута!";
+                                //}
+
+                                // проверим, что совпадают номер участка (секция) и QF
+
+                                bool isChek = false;
+
+                                foreach (AttrData attrData in blockData.ListAttributes)
+                                {
+                                    if (attref.Tag == attrData.AttributeTag)
+                                    {
+                                        attref.TextString = attrData.AttributeValue;
+                                    }
+                                }
+
+
+
+
+
+
+
+                                foreach (AttrData attrData in blockData.ListAttributes)
+                                {
+                                    if (attref.Tag == attrData.AttributeTag)
+                                    {
+                                        attref.TextString = attrData.AttributeValue;
+                                    }
+                                }
+                            }
+                        }
                     }
+
                 }
-                //structure.insPt = bref.Position;
-                //structure.blkName = ((BlockTableRecord)bref.DynamicBlockTableRecord.GetObject(OpenMode.ForRead)).Name;
-                //structure.lyrName = bref.Layer;
-                //structure.rotAngle = bref.Rotation;
+
+
+
                 rbTrans.Commit();
                 rbTrans.Dispose();
 
-                return result;
+                return "Запись атр. выполнена.";
             }
 
         }
@@ -89,7 +111,7 @@ namespace AcadInc
         // Взято из 15/07/2013:
         // https://adn-cis.org/kak-najti-vse-vstavki-dinamicheskogo-bloka.html
         //[CommandMethod("selb")]
-        public ObjectIdCollection selectDynamicBlockReferences()
+        public static ObjectIdCollection selectDynamicBlockReferences()
         {
             ObjectIdCollection resultCollection = null;
 

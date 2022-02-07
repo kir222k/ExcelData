@@ -61,6 +61,9 @@ namespace AcadInc
                 tuple.file,
                 tuple.sheet
             });
+
+            // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуьы блока
+            BlockData.BlockRefModifity(tuple.blockDatas);
         }
 
         public static void BurnDataSavedPath()
@@ -69,7 +72,7 @@ namespace AcadInc
             
         }
 
-        private static (string file, string sheet) BurnDataBased(DataExcel DE)
+        private static (string file, string sheet, List<ExcelData.Model.BlockData> blockDatas) BurnDataBased(DataExcel DE)
         {
 
             var AcSd = new AcadSendMess();
@@ -80,15 +83,17 @@ namespace AcadInc
 
             if (strTable != null)
             {
-                int rows = strTable.GetUpperBound(0) + 1;    // количество строк
-                int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
+                PullPushData PP = new PullPushData(strTable);
+
+               // int rows = strTable.GetUpperBound(0) + 1;    // количество строк
+               // int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
 
                 // Console.WriteLine($"Строк={rows}  Столбцов={columns}");
                 // var str = $"Строк={rows}  Столбцов={columns}";
 
-                AcSd.SendStringDebugStars(ArrComm.Comments);
+               // AcSd.SendStringDebugStars(ArrComm.Comments);
 
-                return (DE.FileExcelName,DE.SheetExcelName);
+                return (DE.FileExcelName,DE.SheetExcelName, PP.GetListBlockDataToPush());
 
             }
             else
@@ -96,13 +101,14 @@ namespace AcadInc
                 //var AcSd = new AcadSendMess();
                 //AcSd.SendStringDebugStars(ArrComm.Comments);
                 MessageBox.Show(ArrComm.Comments);
-                return (string.Empty, string.Empty);
+                return (string.Empty, string.Empty, null);
             }
 
-            var PP = new PullPushData(strTable);
-            AcSd.SendStringDebug(PP.ToString());
+            //AcSd.SendStringDebug(PP.ToString());
 
         }
+
+
 
     }
 }
