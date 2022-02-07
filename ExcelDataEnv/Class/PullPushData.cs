@@ -73,10 +73,12 @@ namespace ExcelData.Class
             int j = excelCellBlockText.ColumnCell;
             for (int i = 0; i < rows - 1; i++)
             {
-                if ( (strTable[i, j] != "") && 
-                        (strTable[i, j] != Const.NullTextReplace) &&
-                        (strTable[i, j] != Const.ExcelTextCellAsBblock)&&
-                        (strTable[i, j] != Const.ExcelTextCellAsAttribut)
+                if (
+                        (strTable[i, j] != "") && //пустая 
+                        (strTable[i, j] != Const.NullTextReplace) && // для замены пустых 
+                        (strTable[i, j] != Const.ExcelTextCellAsBblock) && //  [Блок]
+                        (strTable[i, j] != Const.ExcelTextCellAsAttribut) // [Атрибут]
+                    //excelCellBlockText.TextValue=
                     )
                 {
                     listBlocks.Add(new ExcelRangeText
@@ -104,9 +106,6 @@ namespace ExcelData.Class
         // Список данных для выгрузки. Рабочий метод!
         public List<BlockData> GetListBlockDataToPush()
         {
-
-
-
             throw new NotImplementedException();
         }
 

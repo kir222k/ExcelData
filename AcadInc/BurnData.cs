@@ -13,6 +13,9 @@ using Autodesk.Windows;
 using acadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using ExcelData;
 using ExcelData.Class;
+using ExcelData.Model;
+using System.Windows.Forms;
+
 
 [assembly: CommandClass(typeof(AcadInc.DataFrom))]
 
@@ -33,12 +36,12 @@ namespace AcadInc
         {
             // проверка - если еще нет файла EXCEL (прочитать путь-строку из расш. данных DWG файла )
             BurnDataDial();
+
             // Если есть в расш. даных dwg файла, то
             // проверить на сущ., если есть такой на диске (путь не сломан)
             //BurnDataSavedPath();
             // если нет, то выдать сообщ. об ошибке, и запустить диалог выбора файла
-           // BurnDataDial();
-
+            // BurnDataDial();
 
 
 
@@ -46,21 +49,24 @@ namespace AcadInc
 
         public static void BurnDataDial()
         {
-            DataExcel ED = new DataExcel();
-            BurnDataBased(ED);
+            DataExcel DE = new DataExcel();
+            BurnDataBased(DE);
 
         }
 
         public static void BurnDataSavedPath()
         {
             // DataExcel ED1 = new DataExcel(fileExcelName: <путь из расш.данных файла DWG>, sheetExcelName: "Расчет");
-
+            
         }
 
         private static void BurnDataBased(DataExcel DE)
         {
+            var AcSd = new AcadSendMess();
+            var ArrComm = new ArrayWithComments();
+            ArrComm= DE.GetDataExel();
 
-            string[,] strTable = DE.GetDataExel();
+            string[,] strTable = ArrComm.Array;
 
             if (strTable != null)
             {
@@ -68,15 +74,16 @@ namespace AcadInc
                 int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
 
                 // Console.WriteLine($"Строк={rows}  Столбцов={columns}");
-                var str = $"Строк={rows}  Столбцов={columns}";
+                // var str = $"Строк={rows}  Столбцов={columns}";
 
-                var AcSd = new AcadSendMess();
-                AcSd.SendStringDebugStars(str);
+                AcSd.SendStringDebugStars(ArrComm.Comments);
 
             }
             else
             {
-                //
+                //var AcSd = new AcadSendMess();
+                //AcSd.SendStringDebugStars(ArrComm.Comments);
+                MessageBox.Show(ArrComm.Comments);
             }
 
         }

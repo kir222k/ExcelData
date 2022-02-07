@@ -28,7 +28,10 @@ namespace ExcelData.Class
 
 
 
-        //public string[,] GetDataExel()
+        /// <summary>
+        /// Возращает дынные из листа книги Excel по заданному пути.
+        /// </summary>
+        /// <returns>2мерный массив с комментарием, т.е. получаем если null, то из описания понятно, почему</returns>
         public ArrayWithComments GetDataExel()
         {
             try
@@ -43,11 +46,26 @@ namespace ExcelData.Class
                         ExcelPackage excelFile = new ExcelPackage(new FileInfo(fileExcelName));
 
                         // проверим есть ли в файле лист с названием sheetExcelName
+                        bool isExistWorksheet = false;
+                        var WS = excelFile.Workbook.Worksheets;
+                        foreach (var item in WS)
+                        {
+                            if (item.Name == sheetExcelName)
+                                isExistWorksheet = true;
+                        }
+
+                        if (isExistWorksheet)
+                        {
+                            ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
+                            return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = "ok.." };
+                        }
+                        else
+                        {
+                            return new ArrayWithComments { Array = null, Comments = "Такого листа не существует!" };
+                        }
+
                         // считаем, что проверили:
                         // создаем объект для работы с листом 
-                        ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
-
-                        return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = "ok.." };
                     }
                     else
                     {
@@ -78,21 +96,34 @@ namespace ExcelData.Class
                         // спросим имя листа
                         using (Prompt prompt = new Prompt("Название листа EXCEL", "ВВЕДИТЕ ДАННЫЕ"))
                         {
-                            
                             sheetExcelName = prompt.Result;
-
                         }
 
                         //проверим на ""
                         if (sheetExcelName != string.Empty)
                         {
                             // проверим есть ли в файле лист с названием sheetExcelName
-                            // считаем, что проверили:
-                            // создаем объект для работы с листом 
-                            ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
-                            return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = "ok.." };
+                            bool isExistWorksheet = false;
+                            // по всем листам книги:
+                            var WS = excelFile.Workbook.Worksheets;
+                            foreach (var item in WS)
+                            {
+                                if (item.Name == sheetExcelName) // если совпадение
+                                    isExistWorksheet = true;
+                            }
+                            // Лист есть
+                            if (isExistWorksheet)
+                            {
+                                // создаем объект для работы с листом 
+                                ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
+                                return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = "ok.." };
+                            }
+                            else // Листа нет
+                            {
+                                return new ArrayWithComments { Array = null, Comments = "Такого листа не существует!" };
+                            }
                         }
-                        else
+                        else // если введена пустая строка
                         {
                             //MessageBox.Show("Для загрузки данных требуется задать имя листа в книге Excel.");
                             //return null;
@@ -119,7 +150,7 @@ namespace ExcelData.Class
             catch (Exception e)
             {
                 //return null;
-                return new ArrayWithComments { Array = null, Comments = "Неизвестная ошибка." };
+                return new ArrayWithComments { Array = null, Comments = $"Неизвестная ошибка.\n{e.Message.ToString()}" };
             }
         }
 

@@ -9,6 +9,12 @@ namespace ExcelData.Class
 {
     static class SearchValueInArray
     {
+        /// <summary>
+        /// Возращает Текст, i, j искомой ячеки
+        /// </summary>
+        /// <param name="cellValue"> Текст искомой ячейки, д. быть уникальным на листе</param>
+        /// <param name="strTable"> 2 мерный массив строк - представление листа</param>
+        /// <returns></returns>
         public static  ExcelRangeText GetCellCoordinatesInArray(string cellValue, string[,] strTable)
         {
             ExcelRangeText eT = new ExcelRangeText();

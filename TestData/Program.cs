@@ -41,23 +41,20 @@ namespace TestData
 
             if (Result.Array != null)
             {
+                // Сам массив данных
                 string[,] strTable = Result.Array;
 
-                int rows = strTable.GetUpperBound(0) + 1;    // количество строк
-                int columns = strTable.GetUpperBound(1) + 1;// strTable.Length / rows;        // количество столбцов
+                // количество строк
+                int rows = strTable.GetUpperBound(0) + 1;
+                // количество столбцов
+                int columns = strTable.GetUpperBound(1) + 1;      
 
-                //for (int i = 0; i < rows - 1; i++)
-                //{
-                //    for (int j = 0; j < columns - 1; j++)
-                //    {
-                //        Console.Write(strTable[i, j].ToString() + " ");
-                //    }
-                //    Console.WriteLine("\n");
-                //}
-
+                // Создадим класс для получ. данных 
                 var PP = new PullPushData(strTable);
+                // список из Текст.i.j
                 var sPP = PP.GetExcelRangeBlock();
 
+                // Вывод данных в консоль
                 string str = "";
                 LogEasy.DeleteFileLog(Const.LogFileName);
                 foreach (var blData in sPP)
@@ -69,16 +66,28 @@ namespace TestData
                     Console.WriteLine(str);
 
                     LogEasy.WriteLog(str, Const.LogFileName);
+                    str = "";
                 }
 
                 Console.WriteLine($"Строк={rows}  Столбцов={columns}");
+                Console.WriteLine("\n\nКоличество элем-тов в списке блоков= " + sPP.Count.ToString() + "\n");
+
+                // Вывод ьабл данных в файл
+                LogEasy.DeleteFileLog(Const.LogFileTable);
+                for (int i = 0; i < rows - 1; i++)
+                {
+                    string st = "";
+                    for (int j = 0; j < columns - 1; j++)
+                    {
+                         st += strTable[i, j] + ";";
+                    }
+                    LogEasy.WriteLog(st, Const.LogFileTable);
+                }
+                // LogFileTable
 
             }
 
             Console.WriteLine("\nResult.Comments:\n=>\n" + Result.Comments);
-
-          //  string eventThis = "LogTestErr " + e.Message.ToString();
-
         }
 
         // работает очень медленно

@@ -17,8 +17,9 @@ namespace ExcelData.Sys
             {
                     using (StreamWriter logger = new StreamWriter(path, true))
                     {
-                        logger.WriteLine(DateTime.Now.ToLongTimeString() + " - " + eventName);
-                    }
+                    // logger.WriteLine(DateTime.Now.ToLongTimeString() + " - " + eventName);
+                    logger.WriteLine(eventName);
+                }
             }
         }
 
