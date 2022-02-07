@@ -8,6 +8,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
 using ExcelData.Class;
 using ExcelData.Sys;
+using ExcelData.Model;
 
 namespace TestData
 {
@@ -25,7 +26,7 @@ namespace TestData
             Console.WriteLine($"\nВремя выполнения:\n=>" +
                 $"\n{sw.Elapsed} секунд   " +
                 $"{sw.ElapsedMilliseconds} миллисекунд");
-            Console.WriteLine("\nДля выхода нажмите зю");
+            Console.WriteLine("\nВыход..");
         }
 
 
@@ -33,37 +34,48 @@ namespace TestData
         static void Metod2EpPlus()
         {
             DataExcel ED = new DataExcel(Const.FileXlsName, Const.ExcelWorksheet);
-            string[,] strTable = ED.GetDataExel();
+            //DataExcel ED = new DataExcel("", Const.ExcelWorksheet);
+            // DataExcel ED = new DataExcel(Const.FileXlsName, "");
+            var Result  = new ArrayWithComments();
+            Result = ED.GetDataExel();
 
-            int rows = strTable.GetUpperBound(0) + 1;    // количество строк
-            int columns = strTable.GetUpperBound(1) + 1;// strTable.Length / rows;        // количество столбцов
-
-            //for (int i = 0; i < rows - 1; i++)
-            //{
-            //    for (int j = 0; j < columns - 1; j++)
-            //    {
-            //        Console.Write(strTable[i, j].ToString() + " ");
-            //    }
-            //    Console.WriteLine("\n");
-            //}
-
-            var PP = new PullPushData(strTable);
-            var sPP = PP.GetExcelRangeBlock();
-
-            string str = "";
-            LogEasy.DeleteFileLog(Const.LogFileName);
-            foreach (var blData in sPP)
+            if (Result.Array != null)
             {
-                str += "\n\nБлок: " + blData.TextValue;
-                str += "\nКоординаты_ячейки=> ";
-                str += "\nСтрока= " + blData.RowCell + "\nСтолбец= " + blData.ColumnCell;
+                string[,] strTable = Result.Array;
 
-                Console.WriteLine(str);
+                int rows = strTable.GetUpperBound(0) + 1;    // количество строк
+                int columns = strTable.GetUpperBound(1) + 1;// strTable.Length / rows;        // количество столбцов
 
-                LogEasy.WriteLog(str, Const.LogFileName);
+                //for (int i = 0; i < rows - 1; i++)
+                //{
+                //    for (int j = 0; j < columns - 1; j++)
+                //    {
+                //        Console.Write(strTable[i, j].ToString() + " ");
+                //    }
+                //    Console.WriteLine("\n");
+                //}
+
+                var PP = new PullPushData(strTable);
+                var sPP = PP.GetExcelRangeBlock();
+
+                string str = "";
+                LogEasy.DeleteFileLog(Const.LogFileName);
+                foreach (var blData in sPP)
+                {
+                    str += "\n\nБлок: " + blData.TextValue;
+                    str += "\nКоординаты_ячейки=> ";
+                    str += "\nСтрока= " + blData.RowCell + "\nСтолбец= " + blData.ColumnCell;
+
+                    Console.WriteLine(str);
+
+                    LogEasy.WriteLog(str, Const.LogFileName);
+                }
+
+                Console.WriteLine($"Строк={rows}  Столбцов={columns}");
+
             }
 
-            Console.WriteLine($"Строк={rows}  Столбцов={columns}");
+            Console.WriteLine("\nResult.Comments:\n=>\n" + Result.Comments);
 
           //  string eventThis = "LogTestErr " + e.Message.ToString();
 

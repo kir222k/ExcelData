@@ -24,4 +24,10 @@ namespace ExcelData.Model
         public int RowCell;
         public int ColumnCell;
     }
+
+    public struct ArrayWithComments
+    {
+        public string[,] Array;
+        public string Comments;
+    }
 }

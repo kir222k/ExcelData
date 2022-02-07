@@ -33,9 +33,6 @@ namespace ExcelData.Class
                 }
                 //Console.WriteLine("\n");
             }
-
-
-
             return eT;
         }
     }

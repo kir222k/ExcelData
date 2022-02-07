@@ -96,8 +96,11 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcadSendMess.cs" />
+    <Compile Include="BurnData.cs" />
     <Compile Include="InitSelf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringMetods.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExcelDataEnv\ExcelDataEnv.csproj">
