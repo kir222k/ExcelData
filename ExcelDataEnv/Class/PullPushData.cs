@@ -73,13 +73,7 @@ namespace ExcelData.Class
             int j = excelCellBlockText.ColumnCell;
             for (int i = 0; i < rows - 1; i++)
             {
-                if (
-                        (strTable[i, j] != "") && //пустая 
-                        (strTable[i, j] != Const.NullTextReplace) && // для замены пустых 
-                        (strTable[i, j] != Const.ExcelTextCellAsBblock) && //  [Блок]
-                        (strTable[i, j] != Const.ExcelTextCellAsAttribut) // [Атрибут]
-                    //excelCellBlockText.TextValue=
-                    )
+                if (IsValueCorrect(strTable[i, j]))
                 {
                     listBlocks.Add(new ExcelRangeText
                     {
@@ -97,18 +91,100 @@ namespace ExcelData.Class
         // Список атр.
         public List<ExcelRangeText> GetExcelRangeAttribute()
         {
+            var listAttrs = new List<ExcelRangeText>();
             // Ищем "[Атрибут]"
-            excelCellAttributeText = SearchValueInArray.GetCellCoordinatesInArray(Const.ExcelTextCellAsAttribut, strTable);
+            excelCellAttributeText = SearchValueInArray.GetCellCoordinatesInArray(Const.ExcelTextCellAsAttribute, strTable);
 
-            throw new NotImplementedException();
+            int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
+            // берем массив и ищем в слолбце excelCellBlockText.ColumnCell
+            int i = excelCellAttributeText.RowCell;
+            for (int j = 0; i < columns - 1; i++)
+            {
+                if (IsValueCorrect(strTable[i, j]))
+                {
+                    listAttrs.Add(new ExcelRangeText
+                    {
+                        TextValue = strTable[i, j],
+                        RowCell = i,
+                        ColumnCell = j
+                    });
+                }
+            }
+
+            return listAttrs;
+            //throw new NotImplementedException();
         }
 
-        // Список данных для выгрузки. Рабочий метод!
+        // Список данных для выгрузки. Оновной метод!
         public List<BlockData> GetListBlockDataToPush()
         {
-            throw new NotImplementedException();
+            var listBlockData = new List<BlockData>();
+            // спимок блоков
+            List<ExcelRangeText> listBlocks = new();
+            listBlocks = GetExcelRangeBlock();
+
+            // список атрибутов
+            List<ExcelRangeText> listAttrs = new ();
+            listAttrs = GetExcelRangeAttribute();
+
+            // итак, по списку блоков
+            foreach (ExcelRangeText bl in listBlocks)
+            {
+                // создадим список пар "АтрибутТэг.АтрибутЗнач"
+                List<AttrData> listAttData = new();
+                // пройдем по списку атрибутов
+                //foreach (ExcelRangeText att in listAttrs)
+                //{
+
+                //}
+
+                listAttData = new List<AttrData>
+                {
+                    new AttrData
+                    {
+                        AttributeTag="Tag",
+                        AttributeValue="QF1"
+                    }
+                };
+
+                // создадим элемент типа BlockData
+                BlockData blData = new BlockData
+                {
+                    // добавим имя блока
+                    BlockName=bl.TextValue,
+                    // добавим список пар "АтрибутТэг.АтрибутЗнач"
+                    ListAttributes= listAttData
+                };
+
+                // добавим к списку элемент типа BlockData:
+                listBlockData.Add(blData);
+            }
+
+
+
+            return listBlockData;
+            //throw new NotImplementedException();
         }
 
+
+        private bool IsValueCorrect (string str)
+        {
+            bool isCorrect = false;
+
+            if (
+                       (str != "") && //пустая 
+                       (str != Const.NullTextReplace) && // для замены пустых 
+                       (str != Const.ExcelTextCellAsBblock) && //  [Блок]
+                       (str != Const.ExcelTextCellAsAttribute) // [Атрибут]
+                                                                          //excelCellBlockText.TextValue=
+                   )
+            {
+                isCorrect = true;
+            }
+
+
+                return isCorrect;
+        }
 
         #region ToString Override!
         /// <summary>
@@ -154,7 +230,8 @@ namespace ExcelData.Class
         {
             string  str="";
 
-            foreach (var BlData in GetListBlockDataToPush("ss"))
+            //foreach (var BlData in GetListBlockDataToPush("ss"))
+            foreach (var BlData in GetListBlockDataToPush())
             {
                 str += "\n\nБлок: " + BlData.BlockName;
                 str += "\nАтрибуты=>";
@@ -163,7 +240,7 @@ namespace ExcelData.Class
                 {
                     str += "\n" + it.ToString() + ":";
                     str +=  "\nAttributeTag: "   + attrs.AttributeTag + 
-                            "\nAttributeValue: "  + attrs.AttributeValue;
+                            "\nAttributeValue: "  + attrs.AttributeValue;   
                     it++;
                 }
             }
@@ -171,6 +248,12 @@ namespace ExcelData.Class
             return str;
 
         }
+        /*
+            Person person = new Person { Name = "John", Age = 12 };
+            Console.WriteLine(person);
+            // Output:
+            // Person: John 12
+        */
         #endregion
 
     }

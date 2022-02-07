@@ -26,7 +26,7 @@ namespace ExcelData
         public static string NullTextReplace = "<emp>";
 
         public static string ExcelTextCellAsBblock = "[Блок]";
-        public static string ExcelTextCellAsAttribut = "[Атрибут]";
+        public static string ExcelTextCellAsAttribute = "[Атрибут]";
     }
 
   

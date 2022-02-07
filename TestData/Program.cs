@@ -19,8 +19,9 @@ namespace TestData
             var sw = new Stopwatch();
             sw.Start();
 
-            Metod2EpPlus();
-           
+            // Metod2EpPlus();
+            Metod3EpPlus();
+
             sw.Stop();
 
             Console.WriteLine($"\nВремя выполнения:\n=>" +
@@ -30,65 +31,76 @@ namespace TestData
         }
 
 
-        //работает мега быстро
-        static void Metod2EpPlus()
+        static void Metod3EpPlus()
         {
             DataExcel ED = new DataExcel(Const.FileXlsName, Const.ExcelWorksheet);
-            //DataExcel ED = new DataExcel("", Const.ExcelWorksheet);
-            // DataExcel ED = new DataExcel(Const.FileXlsName, "");
-            var Result  = new ArrayWithComments();
-            Result = ED.GetDataExel();
+            PullPushData PP = new PullPushData(ED.GetDataExel().Array);
+            Console.WriteLine(PP);
+        }
 
-            if (Result.Array != null)
+        //работает мега быстро
+        static void Metod2EpPlus()
+    {
+        DataExcel ED = new DataExcel(Const.FileXlsName, Const.ExcelWorksheet);
+        //DataExcel ED = new DataExcel("", Const.ExcelWorksheet);
+        // DataExcel ED = new DataExcel(Const.FileXlsName, "");
+        var Result  = new ArrayWithComments();
+        Result = ED.GetDataExel();
+
+        if (Result.Array != null)
+        {
+            // Сам массив данных
+            string[,] strTable = Result.Array;
+            // количество строк
+            int rows = strTable.GetUpperBound(0) + 1;
+            // количество столбцов
+            int columns = strTable.GetUpperBound(1) + 1;      
+            // Создадим класс для получ. данных 
+            var PP = new PullPushData(strTable);
+
+            // ТЕСТ СПИСКА БЛОКОВ Вывод данных в консоль
+            // список из Блок.i.j
+            var sPP = PP.GetExcelRangeBlock();
+            string str = "";
+            LogEasy.DeleteFileLog(Const.LogFileName);
+            foreach (var blData in sPP)
             {
-                // Сам массив данных
-                string[,] strTable = Result.Array;
+                str += "\n\nБлок: " + blData.TextValue;
+                str += "\nКоординаты_ячейки=> ";
+                str += "\nСтрока= " + blData.RowCell + "\nСтолбец= " + blData.ColumnCell;
 
-                // количество строк
-                int rows = strTable.GetUpperBound(0) + 1;
-                // количество столбцов
-                int columns = strTable.GetUpperBound(1) + 1;      
+                Console.WriteLine(str);
 
-                // Создадим класс для получ. данных 
-                var PP = new PullPushData(strTable);
-                // список из Текст.i.j
-                var sPP = PP.GetExcelRangeBlock();
+                LogEasy.WriteLog(str, Const.LogFileName);
+                str = "";
+            }
+            Console.WriteLine($"Строк={rows}  Столбцов={columns}");
+            Console.WriteLine("\n\nКоличество элем-тов в списке блоков= " + sPP.Count.ToString() + "\n");
 
-                // Вывод данных в консоль
-                string str = "";
-                LogEasy.DeleteFileLog(Const.LogFileName);
-                foreach (var blData in sPP)
+            // ТЕСТ СПИСКА БЛОК-АТРИБУТЫ Вывод данных в консоль
+            // 
+
+
+
+
+
+
+            // Вывод табл данных в файл
+            LogEasy.DeleteFileLog(Const.LogFileTable);
+            for (int i = 0; i < rows - 1; i++)
+            {
+                string st = "";
+                for (int j = 0; j < columns - 1; j++)
                 {
-                    str += "\n\nБлок: " + blData.TextValue;
-                    str += "\nКоординаты_ячейки=> ";
-                    str += "\nСтрока= " + blData.RowCell + "\nСтолбец= " + blData.ColumnCell;
-
-                    Console.WriteLine(str);
-
-                    LogEasy.WriteLog(str, Const.LogFileName);
-                    str = "";
+                        st += strTable[i, j] + ";";
                 }
-
-                Console.WriteLine($"Строк={rows}  Столбцов={columns}");
-                Console.WriteLine("\n\nКоличество элем-тов в списке блоков= " + sPP.Count.ToString() + "\n");
-
-                // Вывод ьабл данных в файл
-                LogEasy.DeleteFileLog(Const.LogFileTable);
-                for (int i = 0; i < rows - 1; i++)
-                {
-                    string st = "";
-                    for (int j = 0; j < columns - 1; j++)
-                    {
-                         st += strTable[i, j] + ";";
-                    }
-                    LogEasy.WriteLog(st, Const.LogFileTable);
-                }
-                // LogFileTable
-
+                LogEasy.WriteLog(st, Const.LogFileTable);
             }
 
-            Console.WriteLine("\nResult.Comments:\n=>\n" + Result.Comments);
         }
+
+        Console.WriteLine("\nResult.Comments:\n=>\n" + Result.Comments);
+    }
 
         // работает очень медленно
         #region Metod1
