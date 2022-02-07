@@ -44,14 +44,23 @@ namespace AcadInc
             // BurnDataDial();
 
 
-
         }
 
         public static void BurnDataDial()
         {
+            var AcSd = new AcadSendMess();
             DataExcel DE = new DataExcel();
-            BurnDataBased(DE);
 
+            // получим путь к файлу и имя листа, кот. были заданы нами и кот. нужно запомнить в расш. данных
+            var tuple = BurnDataBased(DE);
+
+            // выведем их
+            // AcSd.SendStringDebugStars(tuple.file + "\n" + tuple.sheet);
+            AcSd.SendStringDebugStars(new List<string>
+            {
+                tuple.file,
+                tuple.sheet
+            });
         }
 
         public static void BurnDataSavedPath()
@@ -60,8 +69,9 @@ namespace AcadInc
             
         }
 
-        private static void BurnDataBased(DataExcel DE)
+        private static (string file, string sheet) BurnDataBased(DataExcel DE)
         {
+
             var AcSd = new AcadSendMess();
             var ArrComm = new ArrayWithComments();
             ArrComm= DE.GetDataExel();
@@ -78,13 +88,19 @@ namespace AcadInc
 
                 AcSd.SendStringDebugStars(ArrComm.Comments);
 
+                return (DE.FileExcelName,DE.SheetExcelName);
+
             }
             else
             {
                 //var AcSd = new AcadSendMess();
                 //AcSd.SendStringDebugStars(ArrComm.Comments);
                 MessageBox.Show(ArrComm.Comments);
+                return (string.Empty, string.Empty);
             }
+
+            var PP = new PullPushData(strTable);
+            AcSd.SendStringDebug(PP.ToString());
 
         }
 

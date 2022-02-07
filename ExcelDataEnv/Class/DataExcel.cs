@@ -18,6 +18,9 @@ namespace ExcelData.Class
         private string fileExcelName="";
         private string sheetExcelName="";
 
+        public string FileExcelName { get => fileExcelName; }
+        public string SheetExcelName { get => sheetExcelName; }
+
         public DataExcel (string fileExcelName, string sheetExcelName)
         {
             this.fileExcelName = fileExcelName;

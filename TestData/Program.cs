@@ -34,6 +34,7 @@ namespace TestData
             PullPushData PP = new PullPushData(ED.GetDataExel().Array);
             Console.WriteLine(PP);
 
+            /*
             var listAtts = new List<ExcelRangeText>();
             listAtts = PP.GetExcelRangeAttribute();
             string strAtts = "\nАтрибуты в заголовке:\n=>";
@@ -42,7 +43,7 @@ namespace TestData
                 strAtts += "\n" + att.TextValue;
             }
             Console.WriteLine(strAtts);
-
+            */
         }
 
         //работает мега быстро

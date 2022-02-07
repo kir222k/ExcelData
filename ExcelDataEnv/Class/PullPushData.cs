@@ -118,6 +118,8 @@ namespace ExcelData.Class
         // Список данных для выгрузки. Оновной метод!
         public List<BlockData> GetListBlockDataToPush()
         {
+
+
             var listBlockData = new List<BlockData>();
             // спимок блоков
             List<ExcelRangeText> listBlocks = new();
@@ -131,21 +133,43 @@ namespace ExcelData.Class
             foreach (ExcelRangeText bl in listBlocks)
             {
                 // создадим список пар "АтрибутТэг.АтрибутЗнач"
-                List<AttrData> listAttData = new();
+                List<AttrData> listAttData = new List<AttrData>();
+
                 // пройдем по списку атрибутов
-                //foreach (ExcelRangeText att in listAttrs)
-                //{
-
-                //}
-
-                listAttData = new List<AttrData>
+                foreach (ExcelRangeText att in listAttrs)
                 {
-                    new AttrData
+                    // заберем тэг атрибута
+                    var attDateElement = new AttrData();
+                    attDateElement.AttributeTag = att.TextValue;
+                    // заберем его значение - на пересеч. строки блока и столбца атрибута
+                    // строка блока
+                    int blockRow = bl.RowCell;
+                    // столбец атрибута
+                    int attColumn = att.ColumnCell;
+                    // значение атрибута с таким тэгом для данного вхождения блока
+                    string attValue = strTable[blockRow, attColumn];
+                    // проверим, не пустое ли значение атрибута
+                    if (attValue != Const.NullTextReplace) // если не равно <emp>
                     {
-                        AttributeTag="Tag",
-                        AttributeValue="QF1"
+                        attDateElement.AttributeValue = attValue;
                     }
-                };
+                    else // Если равно <emp>
+                    {
+                        attDateElement.AttributeValue = string.Empty; //  заменим на объект Empty? да!
+                    }
+
+                    // добавим "АтрибутТэг.АтрибутЗнач" в список
+                    listAttData.Add(attDateElement);
+                }
+
+                //listAttData = new List<AttrData>
+                //{
+                //    new AttrData
+                //    {
+                //        AttributeTag="Tag",
+                //        AttributeValue="QF1"
+                //    }
+                //};
 
                 // создадим элемент типа BlockData
                 BlockData blData = new BlockData
@@ -233,7 +257,7 @@ namespace ExcelData.Class
             //foreach (var BlData in GetListBlockDataToPush("ss"))
             foreach (var BlData in GetListBlockDataToPush())
             {
-                str += "\n\nБлок: " + BlData.BlockName;
+                str += "\n.\n.\nБлок: " + BlData.BlockName;
                 str += "\nАтрибуты=>";
                 int it = 1;
                 foreach (var attrs in BlData.ListAttributes)
