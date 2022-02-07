@@ -69,7 +69,7 @@ namespace ExcelData.Class
 
             int rows = strTable.GetUpperBound(0) + 1;    // количество строк
             //int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
-            // берем массив и ищем в слолбце excelCellBlockText.ColumnCell
+            // берем массив и ищем в столбце excelCellBlockText.ColumnCell
             int j = excelCellBlockText.ColumnCell;
             for (int i = 0; i < rows - 1; i++)
             {
@@ -96,9 +96,9 @@ namespace ExcelData.Class
             excelCellAttributeText = SearchValueInArray.GetCellCoordinatesInArray(Const.ExcelTextCellAsAttribute, strTable);
 
             int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
-            // берем массив и ищем в слолбце excelCellBlockText.ColumnCell
+            // берем массив и ищем в строке excelCellAttributeText.RowCell
             int i = excelCellAttributeText.RowCell;
-            for (int j = 0; i < columns - 1; i++)
+            for (int j = 0; j < columns - 1; j++)
             {
                 if (IsValueCorrect(strTable[i, j]))
                 {

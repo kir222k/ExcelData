@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ExcelData;
-using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
 using ExcelData.Class;
 using ExcelData.Sys;
 using ExcelData.Model;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TestData
 {
@@ -36,6 +33,16 @@ namespace TestData
             DataExcel ED = new DataExcel(Const.FileXlsName, Const.ExcelWorksheet);
             PullPushData PP = new PullPushData(ED.GetDataExel().Array);
             Console.WriteLine(PP);
+
+            var listAtts = new List<ExcelRangeText>();
+            listAtts = PP.GetExcelRangeAttribute();
+            string strAtts = "\nАтрибуты в заголовке:\n=>";
+            foreach (ExcelRangeText att in listAtts)
+            {
+                strAtts += "\n" + att.TextValue;
+            }
+            Console.WriteLine(strAtts);
+
         }
 
         //работает мега быстро
