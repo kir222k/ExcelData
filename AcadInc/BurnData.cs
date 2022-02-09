@@ -56,11 +56,19 @@ namespace AcadInc
 
             // выведем их
             // AcSd.SendStringDebugStars(tuple.file + "\n" + tuple.sheet);
+
+
+
             AcSd.SendStringDebugStars(new List<string>
             {
                 tuple.file,
                 tuple.sheet
             });
+
+            // заберем путь м имя листа
+            (string, string) dataToExtData = (tuple.file, tuple.sheet);
+            // Отправим на запись в расш. данные
+            ExtData.WriteToExtDataFile(dataToExtData);
 
             // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуьы блока
             BlockData.BlockRefModifity(tuple.blockDatas);

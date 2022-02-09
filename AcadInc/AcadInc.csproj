@@ -101,6 +101,7 @@
     <Compile Include="AcadSendMess.cs" />
     <Compile Include="BlockData.cs" />
     <Compile Include="BurnData.cs" />
+    <Compile Include="ExtData.cs" />
     <Compile Include="InitSelf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringMetods.cs" />
