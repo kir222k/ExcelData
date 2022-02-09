@@ -40,8 +40,6 @@ namespace AcadInc
             Database db = Application.DocumentManager.MdiActiveDocument.Database;
             using (Transaction rbTrans = db.TransactionManager.StartTransaction())
             {
-                //string result = "";
-
                 BlockReference blRef = (BlockReference)rbTrans.GetObject(bed, OpenMode.ForWrite);
                 BlockTableRecord blRefTabRec = (BlockTableRecord)rbTrans.GetObject(blRef.DynamicBlockTableRecord, OpenMode.ForWrite);
 
@@ -87,8 +85,6 @@ namespace AcadInc
                                             isChekQF = true;
                                         }
                                     }
-
-
                                 }
                             }
 
@@ -118,24 +114,33 @@ namespace AcadInc
                                     }
                                 }
 
-                            }
+                            } // если элемент типа BlockData из списка не подходит для текущего блока, ничего не пишем в его атрибуты 
                         }
                     }
 
-                }
+                } // и берем для манипуляций след. элемент типа BlockData в списке 
 
                 rbTrans.Commit();
                 rbTrans.Dispose();
 
-                return "Запись атр. выполнена.";
+                return "BlockRefAttributeRefWrite is completed.";
             }
 
         }
 
 
-        // Взято из 15/07/2013:
-        // https://adn-cis.org/kak-najti-vse-vstavki-dinamicheskogo-bloka.html
-        //[CommandMethod("selb")]
+        /// <summary>
+        /// <para>
+        /// Пример из 2013г: </para>
+        /// Огромный респект Ривилису:
+        /// <br/>
+        /// <a href="https://adn-cis.org/kak-najti-vse-vstavki-dinamicheskogo-bloka.html"></a>
+        /// <br/><br/>
+        /// и Баладжи Рамамурти: 
+        /// <br/>
+        /// <a href="https://adndevblog.typepad.com/autocad/2012/06/finding-all-block-references-of-a-dynamic-block.html"></a>
+        /// </summary>
+        /// <returns></returns>
         public static ObjectIdCollection selectDynamicBlockReferences()
         {
             ObjectIdCollection resultCollection = null;
@@ -169,21 +174,12 @@ namespace AcadInc
                             foreach (ObjectId id in blockRefIds)
                             {
                                 dynBlockRefs.Add(id);
-                                // зайдем в блок и пройдемся по атрибутам
-                                
-
-
                             }
                         }
                         // Что-нибудь делаем с созданным нами набором
                         //ed.WriteMessage("\nДинамическому блоку \"{0}\" соответствуют {1} анонимных блоков и {2} вставок блока\n",
                         //    btr.Name, anonymousIds.Count, dynBlockRefs.Count);
                         resultCollection = dynBlockRefs;
-
-
-
-
-
                     }
                 }
             }
