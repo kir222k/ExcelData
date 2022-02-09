@@ -17,87 +17,112 @@ using ExcelData.Model;
 
 [assembly: CommandClass(typeof(AcadInc.BlockData))]
 
-
 namespace AcadInc
 {
     public static class BlockData
     {
-
         // https://www.theswamp.org/index.php?topic=55238.0
         //[CommandMethod("selb")]
         public static void BlockRefModifity(List<ExcelData.Model.BlockData> blockDatas)
         {
-            AcadSendMess AcMess = new AcadSendMess();
+            //AcadSendMess AcMess = new AcadSendMess();
 
+            // пройдемся по всем вхождениям всех блоков и будем подсовывать им наш blockDatas
             foreach (ObjectId blockRefId in selectDynamicBlockReferences())
             {
-                    AcMess.SendStringDebug(BlockRefAttributeRefWrite(blockRefId, blockDatas) );
+                // AcMess.SendStringDebug(c);
+                string str = BlockRefAttributeRefWrite(blockRefId, blockDatas);
             }
         }
-
 
         public static string BlockRefAttributeRefWrite(ObjectId bed, List<ExcelData.Model.BlockData> blockDatas)
         {
             Database db = Application.DocumentManager.MdiActiveDocument.Database;
-
             using (Transaction rbTrans = db.TransactionManager.StartTransaction())
             {
-                string result = "";
+                //string result = "";
 
+                BlockReference blRef = (BlockReference)rbTrans.GetObject(bed, OpenMode.ForWrite);
+                BlockTableRecord blRefTabRec = (BlockTableRecord)rbTrans.GetObject(blRef.DynamicBlockTableRecord, OpenMode.ForWrite);
 
-                BlockReference bref = (BlockReference)rbTrans.GetObject(bed, OpenMode.ForWrite);
-                BlockTableRecord bdef = (BlockTableRecord)rbTrans.GetObject(bref.DynamicBlockTableRecord, OpenMode.ForWrite);
-
+                // пройдемся по нашему списку блоков с атрибутами из Excel
+                // и сравним/поработаем с атрибутами данного вхождения блока:
                 foreach (ExcelData.Model.BlockData blockData in blockDatas)
                 {
-                    if (bdef.Name == blockData.BlockName)
+                    if (blRefTabRec.Name == blockData.BlockName)
                     {
-
-                        if (bdef.HasAttributeDefinitions == true)
+                        if (blRefTabRec.HasAttributeDefinitions == true)
                         {
 
-                            foreach (ObjectId id in bref.AttributeCollection)
+                            // по-умолчанию номер участка (секция) не совпадает
+                            bool isChekSection = false;
+                            // по-умолчанию  QF не совпадает
+                            bool isChekQF = false;
+
+                            // проверим, что совпадают УЧАСТОК и N.АПП1
+                            // для этого пройдем по коллекции атрибутов тек вх. блока
+                            foreach (ObjectId id in blRef.AttributeCollection)
                             {
-                                AttributeReference attref = (AttributeReference)rbTrans.GetObject(id, OpenMode.ForWrite);
+                                // получим атрибут
+                                AttributeReference attref = (AttributeReference)rbTrans.GetObject(id, OpenMode.ForRead);
 
-                                //if (attref.Tag ==  Const.BlockAttrApparatTag)
-                                //{
-                                //    //result = attref.Tag;
-                                //    //attref.TextString = "Я тута!";
-                                //}
-
-                                // проверим, что совпадают номер участка (секция) и QF
-
-                                bool isChek = false;
-
+                                // проход по атрибутам, получ. из Excel
                                 foreach (AttrData attrData in blockData.ListAttributes)
                                 {
-                                    if (attref.Tag == attrData.AttributeTag)
+                                    //string tagAttrRef = attref.Tag;
+
+                                    if (
+                                        (attref.Tag.Equals(attrData.AttributeTag)) &&        // если тэг текущего атрибута вх. блока совпал с КАКИМ-ТО атр.  из Excel
+                                        (attref.TextString.Equals(attrData.AttributeValue))     // и если совпадает значение атрибута вх. блока и атрибута из Excel
+                                       ) 
                                     {
-                                        attref.TextString = attrData.AttributeValue;
+                                        // проверим, что тэг = "УЧАСТОК"
+                                        if (attref.Tag.Equals(Const.BlockAttrApparatSect))       
+                                        {
+                                            isChekSection = true;
+                                        }
+                                        // проверим, что тэг = "N.АПП1"
+                                        if (attref.Tag.Equals(Const.BlockAttrApparatQF))       
+                                        {
+                                            isChekQF = true;
+                                        }
+                                    }
+
+
+                                }
+                            }
+
+                            // Если значения атрибутов  N.АПП1 и УЧАСТОК
+                            // совпадают в данном вхождении блока с атрибутами, получ. из Excel:
+                            if (isChekSection && isChekQF)
+                            {
+                                // тогда пройдем по коллекции атрибутов тек вх. блока
+                                foreach (ObjectId id in blRef.AttributeCollection)
+                                {
+                                    // получим атрибут
+                                    AttributeReference attref = (AttributeReference)rbTrans.GetObject(id, OpenMode.ForWrite);
+
+                                    // проход по атрибутам, получ. из Excel
+                                    foreach (AttrData attrData in blockData.ListAttributes)
+                                    {
+                                        // если тэг текущего атрибута вх. блока совпал с атр. из Excel
+                                        if (
+                                            (attref.Tag.Equals(attrData.AttributeTag)) && // И если 
+                                            (!attref.Tag.Equals(Const.BlockAttrApparatQF)) &&
+                                            (!attref.Tag.Equals(Const.BlockAttrApparatSect))
+                                           )
+                                        {
+                                            // тогда запишем в него свое значение
+                                            attref.TextString = attrData.AttributeValue;
+                                        }
                                     }
                                 }
 
-
-
-
-
-
-
-                                foreach (AttrData attrData in blockData.ListAttributes)
-                                {
-                                    if (attref.Tag == attrData.AttributeTag)
-                                    {
-                                        attref.TextString = attrData.AttributeValue;
-                                    }
-                                }
                             }
                         }
                     }
 
                 }
-
-
 
                 rbTrans.Commit();
                 rbTrans.Dispose();
