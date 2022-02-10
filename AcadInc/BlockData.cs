@@ -128,7 +128,6 @@ namespace AcadInc
 
         }
 
-
         /// <summary>
         /// <para>
         /// Пример из 2013г: </para>

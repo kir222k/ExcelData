@@ -54,24 +54,37 @@ namespace AcadInc
             // получим путь к файлу и имя листа, кот. были заданы нами и кот. нужно запомнить в расш. данных
             var tuple = BurnDataBased(DE);
 
-            // выведем их
-            // AcSd.SendStringDebugStars(tuple.file + "\n" + tuple.sheet);
+            // Если имя файла и листа не пустые
+            if (
+                //(tuple.file != string.Empty) && 
+                //(tuple.sheet != string.Empty) &&
+                //(tuple.blockDatas  != null) // если не  добавить проверку tuple.blockDatas на null, будет вылет при отмене диалог. окон.? непонятно пока!
+                (tuple.file != string.Empty) &&
+                (tuple.sheet != string.Empty) 
 
-
-
-            AcSd.SendStringDebugStars(new List<string>
+               )
             {
-                tuple.file,
-                tuple.sheet
-            });
 
-            // заберем путь м имя листа
-            (string, string) dataToExtData = (tuple.file, tuple.sheet);
-            // Отправим на запись в расш. данные
-            ExtData.WriteToExtDataFile(dataToExtData);
+                // выведем их
+                // AcSd.SendStringDebugStars(tuple.file + "\n" + tuple.sheet);
+                AcSd.SendStringDebugStars(new List<string>
+                {
+                    tuple.file,
+                    tuple.sheet
+                });
 
-            // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуьы блока
-            BlockData.BlockRefModifity(tuple.blockDatas);
+                // заберем путь м имя листа
+                (string, string) dataToExtData = (tuple.file, tuple.sheet);
+                // Отправим на запись в расш. данные
+                ExtData.WriteToExtDataExcelFileInfo(dataToExtData);
+
+                // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуьы блока
+                BlockData.BlockRefModifity(tuple.blockDatas);
+            }
+            else 
+            {
+                // AcSd.SendStringDebugStars("Data empty");
+            }
         }
 
         public static void BurnDataSavedPath()
@@ -80,12 +93,13 @@ namespace AcadInc
             
         }
 
-        private static (string file, string sheet, List<ExcelData.Model.BlockData> blockDatas) BurnDataBased(DataExcel DE)
+        private static (string file, string sheet, List<ExcelData.Model.BlockData> blockDatas) 
+            BurnDataBased(DataExcel DE)
         {
 
             var AcSd = new AcadSendMess();
             var ArrComm = new ArrayWithComments();
-            ArrComm= DE.GetDataExel();
+            ArrComm = DE.GetDataExel();
 
             string[,] strTable = ArrComm.Array;
 

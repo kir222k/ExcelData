@@ -85,13 +85,6 @@ namespace TestData
             Console.WriteLine($"Строк={rows}  Столбцов={columns}");
             Console.WriteLine("\n\nКоличество элем-тов в списке блоков= " + sPP.Count.ToString() + "\n");
 
-            // ТЕСТ СПИСКА БЛОК-АТРИБУТЫ Вывод данных в консоль
-            // 
-
-
-
-
-
 
             // Вывод табл данных в файл
             LogEasy.DeleteFileLog(Const.LogFileTable);

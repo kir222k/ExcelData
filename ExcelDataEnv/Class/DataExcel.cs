@@ -34,7 +34,7 @@ namespace ExcelData.Class
         /// <summary>
         /// Возращает дынные из листа книги Excel по заданному пути.
         /// </summary>
-        /// <returns>2мерный массив с комментарием, т.е. получаем если null, то из описания понятно, почему</returns>
+        /// <returns>2мерный массив с комментарием, т.е. если получаем  null, то из описания понятно, почему</returns>
         public ArrayWithComments GetDataExel()
         {
             try
@@ -83,7 +83,7 @@ namespace ExcelData.Class
                 }
                 else
                 {
-#if !DEBUG
+//#if !DEBUG
                     // откроем диалог
                     OpenFileDialog dialog = new OpenFileDialog();
                         // настроить, чтоб видны только *.xlsx
@@ -134,19 +134,24 @@ namespace ExcelData.Class
                         }
 
                     }
+       
 
 
                         // иначе говорим, что файл не выбран и прерываем
                     else
                     {
+                        //    if (res == DialogResult.)
+                        //    {
+
+                        //    }
                         //throw new Exception("Файл не выбран!");
                         //MessageBox.Show("Для загрузки данных требуется выбрать файл.");
                         //return null;
                         return new ArrayWithComments { Array = null, Comments = "Для загрузки данных требуется выбрать файл." };
                     }
-#else
-                    return new ArrayWithComments { Array = null, Comments = "Не заданы имя файла или листа Excel!" };
-#endif
+//#else
+//                    return new ArrayWithComments { Array = null, Comments = "Не заданы имя файла или листа Excel!" };
+//#endif
                 }
             }
 
