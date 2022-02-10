@@ -1,4 +1,7 @@
-﻿using System;
+﻿/* Кирилл Уваров 2022г. 10 февраля. u.k.send@gmail.com. +79062644029
+*/
+
+using System;
 using ExcelData;
 using System.Diagnostics;
 using ExcelData.Class;

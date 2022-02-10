@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* Кирилл Уваров 2022г. 10 февраля u.k.send@gmail.com. +79062644029
+ * добавить для автозагрузки в файл:
+ * c:\program files\autodesk\AutoCAD 2022\Support\en-us\acad2022doc.lsp
+ * строку:
+ * (command "_netload" "u:/dev/ExcelConnect/ExcelData/AcadInc/bin/Release/AcadInc.dll")
+*/
+
+using System;
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using System.Collections.Generic;
@@ -10,8 +17,6 @@ using Autodesk.Windows;
 using acadApp = Autodesk.AutoCAD.ApplicationServices.Application;
 using ExcelData;
 using ExcelData.Class;
-
-
 
 namespace AcadInc
 {
