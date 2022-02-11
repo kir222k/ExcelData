@@ -106,15 +106,6 @@ namespace AcadInc
 
                )
             {
-
-                // выведем их
-                // AcSd.SendStringDebugStars(tuple.file + "\n" + tuple.sheet);
-                AcSd.SendStringDebugStars(new List<string>
-                {
-                    tuple.file,
-                    tuple.sheet
-                });
-
                 // заберем путь м имя листа
                 (string, string) dataToExtData = (tuple.file, tuple.sheet);
                 // Отправим на запись в расш. данные
@@ -155,17 +146,7 @@ namespace AcadInc
             if (strTable != null)
             {
                 PullPushData PP = new PullPushData(strTable);
-
-               // int rows = strTable.GetUpperBound(0) + 1;    // количество строк
-               // int columns = strTable.GetUpperBound(1) + 1; // количество столбцов
-
-                // Console.WriteLine($"Строк={rows}  Столбцов={columns}");
-                // var str = $"Строк={rows}  Столбцов={columns}";
-
-               // AcSd.SendStringDebugStars(ArrComm.Comments);
-
                 return (DE.FileExcelName,DE.SheetExcelName, PP.GetListBlockDataToPush());
-
             }
             else
             {
@@ -174,12 +155,6 @@ namespace AcadInc
                 MessageBox.Show(ArrComm.Comments);
                 return (string.Empty, string.Empty, null);
             }
-
-            //AcSd.SendStringDebug(PP.ToString());
-
         }
-
-
-
     }
 }
