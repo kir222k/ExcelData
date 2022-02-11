@@ -51,7 +51,7 @@ namespace ExcelData
         /// <summary>
         /// Файл не существует! Требуется подключить файл Excel.
         /// </summary>
-        public static string NeedConnectExcelFile = "Файл не существует! Требуется подключить файл Excel."; // Messg.NotFile
+        public static string NeedConnectExcelFile = "Для загрузки данных требуется выбрать файл Excel."; // Messg.NotFile
 
         // "Для связи данных требуется выбрать файл."
 
@@ -67,6 +67,10 @@ namespace ExcelData
         /// </summary>
         public static string NotExcelSheet = "Такого листа не существует!"; // Messg.NotExcelSheet
 
+
+
+
+        public static string AfterCancelDialogFile = "Загрузка данных не будет выполнена."; // Messg.OkExcelFileSheetConnect
         public static string OkExcelFileSheetConnect = "Ok."; // Messg.OkExcelFileSheetConnect
 
     }

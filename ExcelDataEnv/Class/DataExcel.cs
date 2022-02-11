@@ -153,6 +153,10 @@ namespace ExcelData.Class
                     // иначе говорим, что файл не выбран и прерываем
                     else
                     {
+                        if (res == DialogResult.Cancel)
+                        {
+                            return new ArrayWithComments { Array = null, Comments = Messg.AfterCancelDialogFile };
+                        }
                         //MessageBox.Show("Для загрузки данных требуется выбрать файл.");
                         //return null;
                         return new ArrayWithComments { Array = null, Comments = Messg.NeedConnectExcelFile };

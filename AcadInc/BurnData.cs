@@ -67,21 +67,16 @@ namespace AcadInc
                                             BurnDataSavedPath(pathFile, sheetFile);
 #if IsThrow
                                         else
-                                            MessageBox.Show($"Лист {sheetFile} в связанном файле \n{pathFile}\n поврежден или отстутствует"); 
+                                            MessageBox.Show($"Лист \"{sheetFile}\" в связанном файле \n{pathFile}\n поврежден или отстутствует"); 
                                     else
-                                        MessageBox.Show($"Связанный файл \n{pathFile}\n поврежден или отстутствует");
+                                        MessageBox.Show($"Связанный файл \n\"{pathFile}\"\n поврежден или отстутствует");
 #endif
 
                                 }
                             }
-
                         }
-
-
-
                     }
                 }
-
             }
             else
             {
@@ -89,16 +84,6 @@ namespace AcadInc
                 BurnDataDial();
 
             }
-
-
-
-            // Если есть в расш. даных dwg файла, то
-            // проверить на сущ., если есть такой на диске (путь не сломан)
-            //BurnDataSavedPath();
-            // если нет, то выдать сообщ. об ошибке, и 
-            // BurnDataDial();
-
-
         }
 
 
