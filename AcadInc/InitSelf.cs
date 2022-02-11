@@ -3,6 +3,8 @@
  * c:\program files\autodesk\AutoCAD 2022\Support\en-us\acad2022doc.lsp
  * строку:
  * (command "_netload" "u:/dev/ExcelConnect/ExcelData/AcadInc/bin/Release/AcadInc.dll")
+ * 
+ * для нумерации блоков - https://forum.dwg.ru/showthread.php?t=144669
 */
 
 using System;

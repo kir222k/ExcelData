@@ -18,6 +18,8 @@ using ExcelData;
 using ExcelData.Class;
 using ExcelData.Model;
 
+[assembly: CommandClass(typeof(AcadInc.ExtData))]
+
 
 namespace AcadInc
 {
@@ -73,11 +75,11 @@ namespace AcadInc
                 //                   rb.Add(tv);
 
 
-                //                   if (!dict.Contains("samexceldatapath"))
+                //                   if (!dict.Contains(Const.XDataKeyExcelFilePath))
                 //                   {
                 //                       Xrecord xrec = new Xrecord();
                 //                       xrec.Data = rb;
-                //                       dict.SetAt("samexceldatapath", xrec);
+                //                       dict.SetAt(Const.XDataKeyExcelFilePath, xrec);
 
                 //                       trans.AddNewlyCreatedDBObject(xrec, true);
                 //                       trans.Commit();
@@ -86,7 +88,7 @@ namespace AcadInc
                 //                   {
                 //                       // если хзапись с ключом samexceldatapath уже есть, зайдем в нее и заменим данные
                 //                       // т.е. перезапишем путь к файлу
-                //                       ObjectId xrecordId = dict.GetAt("samexceldatapath");
+                //                       ObjectId xrecordId = dict.GetAt(Const.XDataKeyExcelFilePath);
                 //                       Xrecord xrec = xrecordId.GetObject(OpenMode.ForWrite) as Xrecord;
                 //                       xrec.Data = rb;
 
@@ -115,10 +117,10 @@ namespace AcadInc
                 #endregion
 
                 // путь
-                WriteToExtDataModel("samexceldatapath", dataToWrite.file);
+                WriteToExtDataModel(Const.XDataKeyExcelFilePath, dataToWrite.file);
 
                 // лист
-                WriteToExtDataModel("samexceldatasheet", dataToWrite.sheet);
+                WriteToExtDataModel(Const.XDataKeyExcelSheetName, dataToWrite.sheet);
             }
             catch (System.Exception e)
             {
@@ -127,8 +129,7 @@ namespace AcadInc
             }
         }
 
-        // универс. метод
-        // запись в расш.данные модели
+        // универс. метод запись в расш.данные модели
         private static void WriteToExtDataModel (string xKey, string xData)
         {
             Database db = Application.DocumentManager.MdiActiveDocument.Database;
@@ -206,16 +207,92 @@ namespace AcadInc
             }
         }
 
-        private static string ReadAndGetExtDataModel(string xKey)
+        public static (TypedValue[] valueX, string messX) 
+            ReadAndGetExtDataModel(string xKey)
         {
-            string xData = string.Empty;
+            // https://www.programmerall.com/article/8393129803/
 
+            TypedValue[] value = null;
 
+            Database db = Application.DocumentManager.MdiActiveDocument.Database;
 
-            return xData;
+            using (Transaction trans = db.TransactionManager.StartTransaction())
+            {
+                BlockTable bt = (BlockTable)trans.GetObject(db.BlockTableId, OpenMode.ForRead); // ForRead - IN STOCK
+                BlockTableRecord ms = (BlockTableRecord)trans.GetObject(bt[BlockTableRecord.ModelSpace], OpenMode.ForRead);
+
+                if (!ms.ExtensionDictionary.IsNull)
+                {
+                    // откроем словарь на чтение
+                    DBDictionary dict = (DBDictionary)trans.GetObject(ms.ExtensionDictionary, OpenMode.ForRead);
+
+                    if (!dict.Contains(xKey))
+                    {
+                        return (null, "Запись с словаре модели с таким ключом отсутствует");
+                    }
+
+                    ObjectId xrecordId = dict.GetAt(xKey);
+                    Xrecord xrec = xrecordId.GetObject(OpenMode.ForWrite) as Xrecord;
+
+                     value = xrec.Data.AsArray();
+
+                    //xData = Convert.ToString( value.GetValue(1000).ToString());
+
+                    /*                     * 
+myXdata = XDataEnt.XData.AsArray
+var0 = myXdata.GetValue(0)
+                    */
+
+                    /*
+ 81             if (!dict.Contains(xRecordSearchKey))
+ 82             {
+ 83                 return null;//If there is no extended record containing the specified keyword in the extended dictionary, null will be returned;
+ 84             }
+ 85             //First get the extended dictionary of the object or the well-known object dictionary in the graph, and then get the extended record to be queried in the dictionary
+ 86             ObjectId xrecordId = dict.GetAt(xRecordSearchKey);//Get the id of the extended record object
+ 87             Xrecord xrecord = xrecordId.GetObject(OpenMode.ForRead) as Xrecord;//Get extended record object according to id
+ 88             TypedValueList values = xrecord.Data;
+ 89             return values;//The values ​​array should be sequential
+                    */
+
+                }
+                else
+                {
+                    return (null, "Словаря модели нет? Нереально.");
+                }
+
+                return (value, "Ok");
+            }
         }
 
 
+        [CommandMethod("GetXDataFromModelTest")]
+        public static void GetXDataFromModel_Test ()
+        {
+
+            AcadSendMess AcMs = new AcadSendMess();
+
+            try
+            {
+                TypedValue[] vals = ReadAndGetExtDataModel(Const.XDataKeyExcelFilePath).valueX;
+                foreach (TypedValue tv in vals)
+                {
+                    AcMs.SendStringDebug(tv.Value.ToString());
+                }
+
+                AcMs.SendStringDebugStars(vals[vals.Count() - 1].Value.ToString());
+
+
+              //  AcMs.SendStringDebugStars(str);
+
+            }
+            catch (System.Exception)
+            {
+                AcMs.SendStringDebugStars("Ошибка чтения расш.  данных из модели как блока");
+                //throw;
+            }
+            
+        }
 
         #region СПРАВКА
         //DateTime t1 = DateTime.Now;
@@ -301,4 +378,7 @@ namespace AcadInc
         //}
         #endregion
     }
+
+
+
 }

@@ -33,8 +33,42 @@ namespace ExcelData
 
         public static string BlockAttrApparatQF = "N.АПП1";
         public static string BlockAttrApparatSect = "УЧАСТОК";
+
+        public static string XDataKeyExcelFilePath = "samexceldatapath";
+        public static string XDataKeyExcelSheetName = "samexceldatasheet";
+
+
     }
 
-  
+    public static class Messg
+    {
+        /// <summary>
+        /// Файл не существует! Требуется подключить файл Excel.
+        /// </summary>
+        public static string NotFile = "Файл не существует! Требуется подключить файл Excel."; // Messg.NotFile
+
+
+        /// <summary>
+        /// Файл не существует! Требуется подключить файл Excel.
+        /// </summary>
+        public static string NeedConnectExcelFile = "Файл не существует! Требуется подключить файл Excel."; // Messg.NotFile
+
+        // "Для связи данных требуется выбрать файл."
+
+
+
+        /// <summary>
+        /// Для связи данных требуется задать имя листа в книге Excel.
+        /// </summary>
+        public static string NeedSheetNameToConnect = "Для связи данных требуется задать имя листа в книге Excel."; // Messg.NotFileToConnect
+
+        /// <summary>
+        /// Такого листа не существует!
+        /// </summary>
+        public static string NotExcelSheet = "Такого листа не существует!"; // Messg.NotExcelSheet
+
+        public static string OkExcelFileSheetConnect = "Ok."; // Messg.OkExcelFileSheetConnect
+
+    }
 
 }

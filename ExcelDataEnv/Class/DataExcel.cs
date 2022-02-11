@@ -11,13 +11,13 @@ using OfficeOpenXml;
 using System.IO;
 using System.Windows.Forms;
 using ExcelData.Model;
+using ExcelData.Class;
 //#error version
 
 namespace ExcelData.Class
 {
     public class DataExcel
     {
-
         private string fileExcelName="";
         private string sheetExcelName="";
 
@@ -32,8 +32,6 @@ namespace ExcelData.Class
 
         public DataExcel() { }
 
-
-
         /// <summary>
         /// Возращает дынные из листа книги Excel по заданному пути.
         /// </summary>
@@ -43,46 +41,60 @@ namespace ExcelData.Class
             try
             {
                 // Если имя файла и имя листа не равны "", то
-                if ((fileExcelName != "") && (sheetExcelName != ""))
+                if ((fileExcelName != string.Empty) && (sheetExcelName != string.Empty))
                 {
-                    // проверим файл на сущ.
-                    if (File.Exists(fileExcelName))
+                    if (DataCheck.IsExelSheetExist(fileExcelName, sheetExcelName).isFile)
                     {
-                        // Создадим объект для работы с Excel
                         ExcelPackage excelFile = new ExcelPackage(new FileInfo(fileExcelName));
+                        ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
 
-                        // проверим есть ли в файле лист с названием sheetExcelName
-                        bool isExistWorksheet = false;
-                        var WS = excelFile.Workbook.Worksheets;
-                        foreach (var item in WS)
-                        {
-                            if (item.Name == sheetExcelName)
-                                isExistWorksheet = true;
-                        }
-
-                        if (isExistWorksheet)
-                        {
-                            ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
-                            return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = "ok.." };
-                        }
+                        if (DataCheck.IsExelSheetExist(fileExcelName, sheetExcelName).isSheet)
+                            return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = Messg.OkExcelFileSheetConnect };
                         else
-                        {
-                            return new ArrayWithComments { Array = null, Comments = "Такого листа не существует!" };
-                        }
-
-                        // считаем, что проверили:
-                        // создаем объект для работы с листом 
+                            return new ArrayWithComments { Array = null, Comments = Messg.NotExcelSheet };
                     }
                     else
-                    {
-                        // говорим, что нет такого файла и просим переподключить
-                        // throw new Exception("Файл не существует! Требуется переподключение.");
-                        //MessageBox.Show("Файл не существует! Требуется подключить файл Excel.");
-                        //return null;
-                        return new ArrayWithComments {Array= null, Comments = "Файл не существует! Требуется подключить файл Excel." };
-                    }
+                        return new ArrayWithComments { Array = null, Comments = Messg.NotFile };
 
-                // если файл или лист не заданы, то
+ #region УДАЛИТЬ?
+                    // проверим файл на сущ.
+                    ////if (File.Exists(fileExcelName))
+                    ////{
+                    ////    // Создадим объект для работы с Excel
+                    ////    ExcelPackage excelFile = new ExcelPackage(new FileInfo(fileExcelName));
+
+                    ////    // проверим есть ли в файле лист с названием sheetExcelName
+                    ////    bool isExistWorksheet = false;
+                    ////    var WS = excelFile.Workbook.Worksheets;
+                    ////    foreach (var item in WS)
+                    ////    {
+                    ////        if (item.Name == sheetExcelName)
+                    ////            isExistWorksheet = true;
+                    ////    }
+
+                    ////    if (isExistWorksheet)
+                    ////    {
+                    ////        ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
+                    ////        return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = "ok.." };
+                    ////    }
+                    ////    else
+                    ////    {
+                    ////        return new ArrayWithComments { Array = null, Comments = "Такого листа не существует!" };
+                    ////    }
+
+                    ////    // считаем, что проверили:
+                    ////    // создаем объект для работы с листом 
+                    ////}
+                    ////else
+                    ////{
+                    ////    // говорим, что нет такого файла и просим переподключить
+                    ////    // throw new Exception("Файл не существует! Требуется переподключение.");
+                    ////    //MessageBox.Show("Файл не существует! Требуется подключить файл Excel.");
+                    ////    //return null;
+                    ////    return new ArrayWithComments {Array= null, Comments = "Файл не существует! Требуется подключить файл Excel." };
+                    ////}
+#endregion
+                    // если файл или лист не заданы, то
                 }
                 else
                 {
@@ -122,35 +134,28 @@ namespace ExcelData.Class
                             {
                                 // создаем объект для работы с листом 
                                 ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
-                                return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = "ok.." };
+                                return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = Messg.OkExcelFileSheetConnect };
                             }
                             else // Листа нет
                             {
-                                return new ArrayWithComments { Array = null, Comments = "Такого листа не существует!" };
+                                
+                                return new ArrayWithComments { Array = null, Comments = Messg.NotExcelSheet };
                             }
                         }
                         else // если введена пустая строка
                         {
                             //MessageBox.Show("Для загрузки данных требуется задать имя листа в книге Excel.");
                             //return null;
-                            return new ArrayWithComments { Array = null, Comments = "Для загрузки данных требуется задать имя листа в книге Excel." };
+                            return new ArrayWithComments { Array = null, Comments = Messg.NeedSheetNameToConnect };
                         }
 
                     }
-       
-
-
-                        // иначе говорим, что файл не выбран и прерываем
+                    // иначе говорим, что файл не выбран и прерываем
                     else
                     {
-                        //    if (res == DialogResult.)
-                        //    {
-
-                        //    }
-                        //throw new Exception("Файл не выбран!");
                         //MessageBox.Show("Для загрузки данных требуется выбрать файл.");
                         //return null;
-                        return new ArrayWithComments { Array = null, Comments = "Для загрузки данных требуется выбрать файл." };
+                        return new ArrayWithComments { Array = null, Comments = Messg.NeedConnectExcelFile };
                     }
 //#else
 //                    return new ArrayWithComments { Array = null, Comments = "Не заданы имя файла или листа Excel!" };
@@ -166,7 +171,7 @@ namespace ExcelData.Class
         }
 
 
-       private string[,] GetDataExelToArray(ExcelWorksheet worksheet)
+       internal protected string[,] GetDataExelToArray(ExcelWorksheet worksheet)
         {
                 int totalRows = worksheet.Dimension.End.Row;
                 int totalColumns =  worksheet.Dimension.End.Column;
@@ -191,9 +196,6 @@ namespace ExcelData.Class
                 return excelTable; 
 
         }
-
-
-
 
         public void TestDial ()
         {

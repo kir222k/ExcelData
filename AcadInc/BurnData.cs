@@ -1,6 +1,11 @@
 ﻿/* Кирилл Уваров 2022г. 10 февраля. u.k.send@gmail.com. +79062644029
 */
 
+// Чтобы увидеть реакцию системы на ошибки =  IsThrow = true
+// Встречается там, где выявлены и пролечены исключения,
+// если нужно быстро отключить эти таблетки и увидеть ,как именно происходят вылеты
+#define IsThrow
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +24,7 @@ using ExcelData.Class;
 using ExcelData.Model;
 using System.Windows.Forms;
 
-
 [assembly: CommandClass(typeof(AcadInc.DataFrom))]
-
 
 namespace AcadInc
 {
@@ -38,17 +41,68 @@ namespace AcadInc
         public static void BurnData()
         {
             // проверка - если еще нет файла EXCEL (прочитать путь-строку из расш. данных DWG файла )
-            BurnDataDial();
+            TypedValue[] valsPath = ExtData.ReadAndGetExtDataModel(Const.XDataKeyExcelFilePath).valueX;
+            if (valsPath != null)
+            {
+                if  (valsPath.Count() == 1 ) 
+                {
+                    string pathFile = valsPath[valsPath.Count() - 1].Value.ToString();
+                    if (pathFile != string.Empty)
+                    {
+
+                        TypedValue[] valsSheet = ExtData.ReadAndGetExtDataModel(Const.XDataKeyExcelSheetName).valueX;
+                        if (valsSheet != null)
+                        {
+                            if (valsSheet.Count() == 1)
+                            {
+                                string sheetFile = valsSheet[valsSheet.Count() - 1].Value.ToString();
+                                if (sheetFile != string.Empty)
+                                {
+                                    // чтобы не вылетало при попытке загрузки файла, кот.нет
+                                    // чтобы посмотреть вылет => !IsThrow
+#if IsThrow
+                                    if (System.IO.File.Exists(pathFile))
+                                        if (DataCheck.IsExelSheetExist(pathFile, sheetFile).isSheet) // или листа кот.нет
+#endif
+                                            BurnDataSavedPath(pathFile, sheetFile);
+#if IsThrow
+                                        else
+                                            MessageBox.Show($"Лист {sheetFile} в связанном файле \n{pathFile}\n поврежден или отстутствует"); 
+                                    else
+                                        MessageBox.Show($"Связанный файл \n{pathFile}\n поврежден или отстутствует");
+#endif
+
+                                }
+                            }
+
+                        }
+
+
+
+                    }
+                }
+
+            }
+            else
+            {
+                // запустить диалог выбора файла
+                BurnDataDial();
+
+            }
+
+
 
             // Если есть в расш. даных dwg файла, то
             // проверить на сущ., если есть такой на диске (путь не сломан)
             //BurnDataSavedPath();
-            // если нет, то выдать сообщ. об ошибке, и запустить диалог выбора файла
+            // если нет, то выдать сообщ. об ошибке, и 
             // BurnDataDial();
 
 
         }
 
+
+        [CommandMethod("BurnDataFromExcelReplace")]
         public static void BurnDataDial()
         {
             var AcSd = new AcadSendMess();
@@ -90,10 +144,17 @@ namespace AcadInc
             }
         }
 
-        public static void BurnDataSavedPath()
+        public static void BurnDataSavedPath(string fileExcelName, string sheetExcelName)
         {
-            // DataExcel ED1 = new DataExcel(fileExcelName: <путь из расш.данных файла DWG>, sheetExcelName: "Расчет");
-            
+            // создадим экз. класса для работы с данными из Excel
+            DataExcel DE = new DataExcel(fileExcelName, sheetExcelName);
+
+            // получим данные
+            var tuple = BurnDataBased(DE);
+
+            // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуты блока
+            BlockData.BlockRefModifity(tuple.blockDatas);
+
         }
 
         private static (string file, string sheet, List<ExcelData.Model.BlockData> blockDatas) 

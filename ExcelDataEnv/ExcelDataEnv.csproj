@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\DataCheck.cs" />
     <Compile Include="Class\DialogSheetName.cs" />
     <Compile Include="Class\SearchValueInArray.cs" />
     <Compile Include="Const.cs" />
