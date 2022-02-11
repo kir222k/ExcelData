@@ -28,6 +28,7 @@ namespace ExcelData.Class
         public Prompt(string text, string caption, List<string> listSheets)
         {
             Result = ShowDialog(text, caption, listSheets);
+
         }
 
         //use a using statement
@@ -45,7 +46,7 @@ namespace ExcelData.Class
 
 
             Label textLabel = new Label() { Left = 50, Top = 20, Text = text, Dock = DockStyle.Top, TextAlign = ContentAlignment.MiddleCenter };
-            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 300 };
+            //TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 300 };
             Button confirmation = new Button() { Text = "Ok", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
 
             //
@@ -53,21 +54,21 @@ namespace ExcelData.Class
             {
                 Left = 50,
                 Top = 30,
-                Width=300,
+                Width=300,  
                 Text = listSheets[0],
                 DataSource = listSheets
             };
 
             confirmation.Click += (sender, e) => { prompt.Close(); };
-            prompt.Controls.Add(textBox);
-            //
+            //prompt.Controls.Add(textBox);
+            ///
             prompt.Controls.Add(cbx);
 
             prompt.Controls.Add(confirmation);
             prompt.Controls.Add(textLabel);
             prompt.AcceptButton = confirmation;
 
-            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+            return prompt.ShowDialog() == DialogResult.OK ? cbx.Text : "";
         }
 
 

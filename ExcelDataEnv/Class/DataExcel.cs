@@ -111,8 +111,15 @@ namespace ExcelData.Class
                         // Создадим объект для работы с Excel
                         ExcelPackage excelFile = new ExcelPackage(new FileInfo (fileExcelName));
 
+                        // список листов книги
+                        List<string> listSheet = new List<string>();
+                        foreach (ExcelWorksheet ws in excelFile.Workbook.Worksheets)
+                        {
+                            listSheet.Add(ws.Name);
+                        }
+
                         // спросим имя листа
-                        using (Prompt prompt = new Prompt("Название листа EXCEL", "ВВЕДИТЕ ДАННЫЕ"))
+                        using (Prompt prompt = new Prompt("Книга: " + fileExcelName , "Выберите лист в книге Excel", listSheet))
                         {
                             sheetExcelName = prompt.Result;
                         }
