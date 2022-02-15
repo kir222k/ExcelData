@@ -152,7 +152,11 @@ namespace AcadInc
             {
                 //var AcSd = new AcadSendMess();
                 //AcSd.SendStringDebugStars(ArrComm.Comments);
-                MessageBox.Show(ArrComm.Comments);
+                if (ArrComm.Comments != Messg.AfterCancelDialogFile) // пропускаем сообщение при закрытии диал. окна по кhестику или ESCAPE (юзер и так понимает, что отказывается от продолжения)
+                {
+
+                    MessageBox.Show(ArrComm.Comments);
+                }
                 return (string.Empty, string.Empty, null);
             }
         }
