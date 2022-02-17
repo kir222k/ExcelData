@@ -60,12 +60,16 @@ namespace AcadInc
                                 {
                                     // чтобы не вылетало при попытке загрузки файла, кот.нет
                                     // чтобы посмотреть вылет => !IsThrow
-#if IsThrow
+#if !IsThrow
                                     if (System.IO.File.Exists(pathFile))
                                         if (DataCheck.IsExelSheetExist(pathFile, sheetFile).isSheet) // или листа кот.нет
+                                        {
 #endif
                                             BurnDataSavedPath(pathFile, sheetFile);
-#if IsThrow
+                                            AcadSendMess AsMg = new AcadSendMess();
+                                            AsMg.SendStringDebugStars("Подключенный файл Excel:\n" + pathFile);
+#if !IsThrow
+                                        }
                                         else
                                             MessageBox.Show($"Лист \"{sheetFile}\" в связанном файле \n{pathFile}\n поврежден или отстутствует"); 
                                     else
@@ -85,6 +89,64 @@ namespace AcadInc
 
             }
         }
+
+
+        /// <summary>
+        /// Основной метод загрузки данных.
+        /// </summary>
+        [CommandMethod("BurnDataFromExcel2")]
+        public static void BurnData2()
+        {
+            // проверка - если еще нет файла EXCEL (прочитать путь-строку из расш. данных DWG файла )
+            TypedValue[] valsPath = ExtData.ReadAndGetExtDataModel(Const.XDataKeyExcelFilePath).valueX;
+            if (valsPath != null)
+            {
+                if (valsPath.Count() == 1)
+                {
+                    string pathFile = valsPath[valsPath.Count() - 1].Value.ToString();
+                    if (pathFile != string.Empty)
+                    {
+
+                        TypedValue[] valsSheet = ExtData.ReadAndGetExtDataModel(Const.XDataKeyExcelSheetName).valueX;
+                        if (valsSheet != null)
+                        {
+                            if (valsSheet.Count() == 1)
+                            {
+                                string sheetFile = valsSheet[valsSheet.Count() - 1].Value.ToString();
+                                if (sheetFile != string.Empty)
+                                {
+                                    // чтобы не вылетало при попытке загрузки файла, кот.нет
+                                    // чтобы посмотреть вылет => !IsThrow
+#if IsThrow
+                                    if (System.IO.File.Exists(pathFile))
+                                        if (DataCheck.IsExelSheetExist(pathFile, sheetFile).isSheet) // или листа кот.нет
+                                        {
+#endif
+                                            BurnDataSavedPath(pathFile, sheetFile);
+                                            AcadSendMess AsMg = new AcadSendMess();
+                                            AsMg.SendStringDebugStars("Подключенный файл Excel:\n" + pathFile);
+#if IsThrow
+                                        }
+                                        else
+                                            MessageBox.Show($"Лист \"{sheetFile}\" в связанном файле \n{pathFile}\n поврежден или отстутствует");
+                                    else
+                                        MessageBox.Show($"Связанный файл \n\"{pathFile}\"\n поврежден или отстутствует");
+#endif
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // запустить диалог выбора файла
+                BurnDataDial();
+
+            }
+        }
+
 
 
         [CommandMethod("BurnDataFromExcelReplace")]
@@ -112,8 +174,12 @@ namespace AcadInc
                 ExtData.WriteToExtDataExcelFileInfo(dataToExtData);
 
                 // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуьы блока
-                // BlockData.BlockRefModifity(tuple.blockDatas);
-                BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
+                 BlockData.BlockRefModifity(tuple.blockDatas);
+                //BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
+
+                AcadSendMess AsMg = new AcadSendMess();
+                AsMg.SendStringDebugStars("Подключенный файл Excel:\n" + tuple.file);
+
 
             }
             else 
@@ -121,6 +187,48 @@ namespace AcadInc
                 // AcSd.SendStringDebugStars("Data empty");
             }
         }
+        
+
+        [CommandMethod("BurnDataFromExcelReplace2")]
+        public static void BurnDataDial2()
+        {
+            var AcSd = new AcadSendMess();
+            DataExcel DE = new DataExcel();
+
+            // получим путь к файлу и имя листа, кот. были заданы нами и кот. нужно запомнить в расш. данных
+            var tuple = BurnDataBased(DE);
+
+            // Если имя файла и листа не пустые
+            if (
+                //(tuple.file != string.Empty) && 
+                //(tuple.sheet != string.Empty) &&
+                //(tuple.blockDatas  != null) // если не  добавить проверку tuple.blockDatas на null, будет вылет при отмене диалог. окон.? непонятно пока!
+                (tuple.file != string.Empty) &&
+                (tuple.sheet != string.Empty)
+
+               )
+            {
+                // заберем путь м имя листа
+                (string, string) dataToExtData = (tuple.file, tuple.sheet);
+                // Отправим на запись в расш. данные
+                ExtData.WriteToExtDataExcelFileInfo(dataToExtData);
+
+                // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуьы блока
+                // BlockData.BlockRefModifity(tuple.blockDatas);
+                BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
+
+                AcadSendMess AsMg = new AcadSendMess();
+                AsMg.SendStringDebugStars("Подключенный файл Excel:\n" + tuple.file);
+
+
+            }
+            else
+            {
+                // AcSd.SendStringDebugStars("Data empty");
+            }
+        }
+
+
 
         public static void BurnDataSavedPath(string fileExcelName, string sheetExcelName)
         {
@@ -131,10 +239,27 @@ namespace AcadInc
             var tuple = BurnDataBased(DE);
 
             // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуты блока
-            // BlockData.BlockRefModifity(tuple.blockDatas);
-            BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
+             BlockData.BlockRefModifity(tuple.blockDatas);
+            //BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
 
         }
+
+        public static void BurnDataSavedPath2(string fileExcelName, string sheetExcelName)
+        {
+            // создадим экз. класса для работы с данными из Excel
+            DataExcel DE = new DataExcel(fileExcelName, sheetExcelName);
+
+            // получим данные
+            var tuple = BurnDataBased(DE);
+
+            // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуты блока
+            //BlockData.BlockRefModifity(tuple.blockDatas);
+           BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
+
+        }
+
+
+
 
         private static (string file, string sheet, List<ExcelData.Model.BlockData> blockDatas) 
             BurnDataBased(DataExcel DE)
