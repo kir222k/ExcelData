@@ -31,12 +31,36 @@ namespace AcadInc
             //AcadSendMess AcMess = new AcadSendMess();
 
             // пройдемся по всем вхождениям всех блоков и будем подсовывать им наш blockDatas
-            foreach (ObjectId blockRefId in selectDynamicBlockReferences())
+            foreach (ObjectId blockRefId in BlockUni.selectDynamicBlockReferences())
             {
                 // AcMess.SendStringDebug(c);
                 string str = BlockRefAttributeRefWrite(blockRefId, blockDatas);
             }
+
+
+
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blockDatas"></param>
+        public static void BlockRefNotDynamicModifity(List<ExcelData.Model.BlockData> blockDatas)
+        {
+            //AcadSendMess AcMess = new AcadSendMess();
+
+            // пройдемся по всем вхождениям всех блоков и будем подсовывать им наш blockDatas
+            foreach ( ObjectIdCollection objectIdCollection in BlockUni.selectNotDynamicBlockReferences())
+            {
+                foreach (ObjectId blockRefId in objectIdCollection)
+                {
+                    // AcMess.SendStringDebug(c);
+                    string str = BlockRefAttributeRefWrite(blockRefId, blockDatas);
+                }
+
+            }
+        }
+
 
         public static string BlockRefAttributeRefWrite(ObjectId bed, List<ExcelData.Model.BlockData> blockDatas)
         {
@@ -44,8 +68,8 @@ namespace AcadInc
             using (Transaction rbTrans = db.TransactionManager.StartTransaction())
             {
                 BlockReference blRef = (BlockReference)rbTrans.GetObject(bed, OpenMode.ForWrite);
-                BlockTableRecord blRefTabRec = (BlockTableRecord)rbTrans.GetObject(blRef.DynamicBlockTableRecord, OpenMode.ForWrite);
-
+                //BlockTableRecord blRefTabRec = (BlockTableRecord)rbTrans.GetObject(blRef.DynamicBlockTableRecord, OpenMode.ForWrite);
+                BlockTableRecord blRefTabRec = (BlockTableRecord)rbTrans.GetObject(blRef.BlockTableRecord, OpenMode.ForWrite);
                 // пройдемся по нашему списку блоков с атрибутами из Excel
                 // и сравним/поработаем с атрибутами данного вхождения блока:
                 foreach (ExcelData.Model.BlockData blockData in blockDatas)
@@ -131,62 +155,8 @@ namespace AcadInc
 
         }
 
-        /// <summary>
-        /// <para>
-        /// Пример из 2013г: </para>
-        /// Огромный респект Ривилису:
-        /// <br/>
-        /// <a href="https://adn-cis.org/kak-najti-vse-vstavki-dinamicheskogo-bloka.html"></a>
-        /// <br/><br/>
-        /// и Баладжи Рамамурти: 
-        /// <br/>
-        /// <a href="https://adndevblog.typepad.com/autocad/2012/06/finding-all-block-references-of-a-dynamic-block.html"></a>
-        /// </summary>
-        /// <returns></returns>
-        public static ObjectIdCollection selectDynamicBlockReferences()
-        {
-            ObjectIdCollection resultCollection = null;
 
-            //Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
-            Database db = Application.DocumentManager.MdiActiveDocument.Database;
-            using (Transaction trans = db.TransactionManager.StartTransaction())
-            {
-                // получаем таблицу блоков и проходим по всем записям таблицы блоков
-                BlockTable bt =
-                  (BlockTable)trans.GetObject(db.BlockTableId, OpenMode.ForRead);
-                foreach (ObjectId btrId in bt)
-                {
-                    // получаем запись таблицы блоков и смотри анонимная ли она
-                    BlockTableRecord btr =
-                      (BlockTableRecord)trans.GetObject(btrId, OpenMode.ForRead);
-                    if (btr.IsDynamicBlock)
-                    {
-                        // получаем все анонимные блоки динамического блока
-                        ObjectIdCollection anonymousIds = btr.GetAnonymousBlockIds();
-                        // получаем все прямые вставки динамического блока
-                        ObjectIdCollection dynBlockRefs = btr.GetBlockReferenceIds(true, true);
-                        foreach (ObjectId anonymousBtrId in anonymousIds)
-                        {
-                            // получаем анонимный блок
-                            BlockTableRecord anonymousBtr =
-                                 (BlockTableRecord)trans.GetObject(anonymousBtrId, OpenMode.ForRead);
-                            // получаем все вставки этого блока
-                            ObjectIdCollection blockRefIds =
-                                 anonymousBtr.GetBlockReferenceIds(true, true);
-                            foreach (ObjectId id in blockRefIds)
-                            {
-                                dynBlockRefs.Add(id);
-                            }
-                        }
-                        // Что-нибудь делаем с созданным нами набором
-                        //ed.WriteMessage("\nДинамическому блоку \"{0}\" соответствуют {1} анонимных блоков и {2} вставок блока\n",
-                        //    btr.Name, anonymousIds.Count, dynBlockRefs.Count);
-                        resultCollection = dynBlockRefs;
-                    }
-                }
-            }
 
-            return resultCollection;
-        }
+
     }
 }

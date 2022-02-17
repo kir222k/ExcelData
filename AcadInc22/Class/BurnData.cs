@@ -112,7 +112,9 @@ namespace AcadInc
                 ExtData.WriteToExtDataExcelFileInfo(dataToExtData);
 
                 // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуьы блока
-                BlockData.BlockRefModifity(tuple.blockDatas);
+                // BlockData.BlockRefModifity(tuple.blockDatas);
+                BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
+
             }
             else 
             {
@@ -129,7 +131,8 @@ namespace AcadInc
             var tuple = BurnDataBased(DE);
 
             // а  tuple.blockDatas Передадим в класс, кот. занесет данные в атрибуты блока
-            BlockData.BlockRefModifity(tuple.blockDatas);
+            // BlockData.BlockRefModifity(tuple.blockDatas);
+            BlockData.BlockRefNotDynamicModifity(tuple.blockDatas);
 
         }
 
