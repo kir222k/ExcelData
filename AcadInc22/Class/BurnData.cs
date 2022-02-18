@@ -36,6 +36,9 @@ namespace AcadInc
 
         /// <summary>
         /// Основной метод загрузки данных.
+        /// <remark>
+        /// Вызывается из AutoCAD командой BurnDataFromExcel
+        /// </remark>
         /// </summary>
         [CommandMethod("BurnDataFromExcel")]
         public static void BurnData()

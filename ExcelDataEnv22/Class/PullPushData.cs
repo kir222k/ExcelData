@@ -21,10 +21,8 @@ namespace ExcelData.Class
         /// Конструктор - передаем  лист Excel, созданный из  файла ТРН библиотекой EPPlus.
         /// </summary>
         /// <param name="strTable"> Лист Excel в виде 2мерн. массива.</param>
-        public PullPushData (string[,] strTable)  //, string fileExcelName, string sheetExcelName)
+        public PullPushData (string[,] strTable) 
         {
-            // this.fileExcelName = fileExcelName;
-            // this.sheetExcelName = sheetExcelName;
             this.strTable = strTable;
         }
 
@@ -34,33 +32,6 @@ namespace ExcelData.Class
         public PullPushData() { }
         #endregion
 
-        /*
-        /// <summary>
-        /// Ищем "[Блок]"
-        /// </summary>
-        /// <returns>Зн.ячейки с ее координатами.</returns>
-        public ExcelRangeText GetExcelCellBlockText()
-        {
-            ExcelRangeText? eT = null;
-
-
-
-            return (ExcelRangeText)eT;
-
-            //Nullable<ExcelRangeText> eT=null;
-            //throw new NotImplementedException();
-            //return new ExcelRangeText { TextValue = "Тута", ColumnCell = 1, RowCell = 2 };
-        }
-
-        /// <summary>
-        /// Ищем "[Атрибут]"
-        /// </summary>
-        /// <returns>Зн.ячейки с ее координатами.</returns>
-        public ExcelRangeText GetExcelCellAttributeText()
-        {
-            throw new NotImplementedException();
-        }
-        */
 
         // Список блоков.
         public List<ExcelRangeText> GetExcelRangeBlock()
