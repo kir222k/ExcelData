@@ -43,12 +43,12 @@ namespace ExcelData.Class
                 // Если имя файла и имя листа не равны "", то
                 if ((fileExcelName != string.Empty) && (sheetExcelName != string.Empty))
                 {
-                    if (DataCheck.IsExelSheetExist(fileExcelName, sheetExcelName).isFile)
+                    if (DataCheck.IsExcelSheetExist(fileExcelName, sheetExcelName).isFile)
                     {
                         ExcelPackage excelFile = new ExcelPackage(new FileInfo(fileExcelName));
                         ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[sheetExcelName];
 
-                        if (DataCheck.IsExelSheetExist(fileExcelName, sheetExcelName).isSheet)
+                        if (DataCheck.IsExcelSheetExist(fileExcelName, sheetExcelName).isSheet)
                             return new ArrayWithComments { Array = GetDataExelToArray(worksheet), Comments = Messg.OkExcelFileSheetConnect };
                         else
                             return new ArrayWithComments { Array = null, Comments = Messg.NotExcelSheet };
@@ -193,9 +193,31 @@ namespace ExcelData.Class
                 {
                     for (int j = 0; j < totalColumns - 1; j++)
                     {
-                        if (worksheet.Cells[i+1, j+1].Value != null)
+                    ExcelRangeBase Cell = worksheet.Cells[i + 1, j + 1];
+                        if (Cell.Value != null)
                         {
-                            excelTable[i, j] = Convert.ToString(worksheet.Cells[i+1, j+1].Value);
+                        // проверяем , если это число - округляем до 2 знаков 
+                        string strChek = Convert.ToString(Cell.Value);
+
+                        if (
+                            (Cell.Style.Numberformat.Format.Contains("0.0")) ||
+                            (ValueChek.IsDigitStr(strChek))
+                           )
+                            //if (Cell.Style.Numberformat.Format.Contains("General"))
+                        {
+                                
+                            double valueDouble = Convert.ToDouble(ValueChek.GetPointValid(Convert.ToString(Cell.Value)));
+                            //excelTable[i, j] = Convert.ToString(Math.Round(valueDouble, Const.RoundForDouble) );
+
+                            string str = Convert.ToString(Math.Round(valueDouble, Const.RoundForDouble));
+                            str = ValueChek.GetAddZeroStr(str, Const.RoundForDouble);
+                             
+                            excelTable[i, j] = str; //"Value=" + str + " Format=" + Cell.Style.Numberformat.Format;
+                            //excelTable[i, j] = "c";
+                        }
+                        else
+                            // если нет - то сразу конвертируем в строку
+                            excelTable[i, j] = Convert.ToString(Cell.Value); // + " Type = " + Cell.Style.Numberformat.Format);
                         }
                         else
                         {
@@ -208,10 +230,7 @@ namespace ExcelData.Class
 
         }
 
-        public void TestDial ()
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            DialogResult res = dialog.ShowDialog();
-        }
+
+
     }
 }

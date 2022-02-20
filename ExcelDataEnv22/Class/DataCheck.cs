@@ -15,9 +15,9 @@ namespace ExcelData.Class
 {
     public  static class DataCheck
     {
-        public static (bool isFile, bool isSheet) IsExelSheetExist(string fileExcelName, string sheetExcelName)
+        public static (bool isFile, bool isSheet) IsExcelSheetExist(string fileExcelName, string sheetExcelName)
         {
-            // DataCheck.IsExelSheetExist (fileExcelName,sheetExcelName)
+            // DataCheck.IsExcelSheetExist (fileExcelName,sheetExcelName)
             bool isExistFile = false;
             bool isExistWorksheet = false;
             // проверим файл на сущ.

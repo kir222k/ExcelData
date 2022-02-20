@@ -64,8 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\DataCheck.cs" />
+    <Compile Include="Class\DataExcelTest.cs" />
     <Compile Include="Class\DialogSheetName.cs" />
     <Compile Include="Class\SearchValueInArray.cs" />
+    <Compile Include="Class\ValueChek.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Model\Structures.cs" />
     <Compile Include="Class\PullPushData.cs" />

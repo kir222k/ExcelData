@@ -122,7 +122,7 @@ namespace AcadInc
                                     // чтобы посмотреть вылет => !IsThrow
 #if IsThrow
                                     if (System.IO.File.Exists(pathFile))
-                                        if (DataCheck.IsExelSheetExist(pathFile, sheetFile).isSheet) // или листа кот.нет
+                                        if (DataCheck.IsExcelSheetExist(pathFile, sheetFile).isSheet) // или листа кот.нет
                                         {
 #endif
                                             BurnDataSavedPath(pathFile, sheetFile);
