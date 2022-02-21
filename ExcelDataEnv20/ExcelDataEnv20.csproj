@@ -67,6 +67,9 @@
     <Compile Include="..\ExcelDataEnv22\Class\DataExcel.cs">
       <Link>Class\DataExcel.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelDataEnv22\Class\DataExcelTest.cs">
+      <Link>Class\DataExcelTest.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelDataEnv22\Class\DialogSheetName.cs">
       <Link>Class\DialogSheetName.cs</Link>
     </Compile>
@@ -75,6 +78,9 @@
     </Compile>
     <Compile Include="..\ExcelDataEnv22\Class\SearchValueInArray.cs">
       <Link>Class\SearchValueInArray.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelDataEnv22\Class\ValueChek.cs">
+      <Link>Class\ValueChek.cs</Link>
     </Compile>
     <Compile Include="..\ExcelDataEnv22\Const.cs">
       <Link>Const.cs</Link>

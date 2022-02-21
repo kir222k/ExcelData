@@ -125,7 +125,7 @@ namespace AcadInc
                                         if (DataCheck.IsExcelSheetExist(pathFile, sheetFile).isSheet) // или листа кот.нет
                                         {
 #endif
-                                            BurnDataSavedPath(pathFile, sheetFile);
+                                            BurnDataSavedPath2(pathFile, sheetFile);
                                             AcadSendMess AsMg = new AcadSendMess();
                                             AsMg.SendStringDebugStars("Подключенный файл Excel:\n" + pathFile);
 #if IsThrow

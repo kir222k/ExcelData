@@ -1,6 +1,8 @@
 ﻿/* Кирилл Уваров 2022г. 10 февраля. u.k.send@gmail.com. +79062644029
 */
 
+#define IsVariant
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -193,33 +195,45 @@ namespace ExcelData.Class
                 {
                     for (int j = 0; j < totalColumns - 1; j++)
                     {
-                    ExcelRangeBase Cell = worksheet.Cells[i + 1, j + 1];
+                        ExcelRangeBase Cell = worksheet.Cells[i + 1, j + 1];
                         if (Cell.Value != null)
                         {
-                        // проверяем , если это число - округляем до 2 знаков 
+
+#if !IsVariant
+                        // найдем числа количеством знаков после запятой, кот. больше, чем заданное. напр. 2.
+
+                        // переведем значение ячейки в строку.
                         string strChek = Convert.ToString(Cell.Value);
 
                         if (
-                            (Cell.Style.Numberformat.Format.Contains("0.0")) ||
-                            (ValueChek.IsDigitStr(strChek))
+                            // (Cell.Style.Numberformat.Format.Contains("0.0")) || // Если формат числа .. уберем это из условия 
+                            // проверяем , если это строка, кот. может быть преобразована в число -
+                            // или все цифры или цифры с единств. разделителем "," или "."
+                            (ValueChek.IsDigitStr(strChek)) &&
+                            //(ValueChek.GetQuantOfPoint(strChek) > 0) // т.е. дробь
+                            (ValueChek.GetQuantOfPoint(strChek) > Const.RoundForDouble) // проверяем, если число знаков  больше заданного.
                            )
-                            //if (Cell.Style.Numberformat.Format.Contains("General"))
                         {
-                                
-                            double valueDouble = Convert.ToDouble(ValueChek.GetPointValid(Convert.ToString(Cell.Value)));
-                            //excelTable[i, j] = Convert.ToString(Math.Round(valueDouble, Const.RoundForDouble) );
-
-                            string str = Convert.ToString(Math.Round(valueDouble, Const.RoundForDouble));
-                            str = ValueChek.GetAddZeroStr(str, Const.RoundForDouble);
-                             
-                            excelTable[i, j] = str; //"Value=" + str + " Format=" + Cell.Style.Numberformat.Format;
-                            //excelTable[i, j] = "c";
+                            // т.е. нашли строку, кот. может быть преобразована в число, и число знаков больше заданного
+                            // для нашего случая заменим разделитель, если он "." на ","
+                            //strChek = ValueChek.GetStringWithPointCorrect(strChek);
+                            // преобразуем в число
+                            double valueDouble = Convert.ToDouble(strChek);
+                            // округлим
+                            //string str = Convert.ToString(Math.Round(valueDouble, Const.RoundForDouble));
+                            strChek = Convert.ToString(Math.Round(valueDouble, Const.RoundForDouble));
+                            // добавим нули, если не хватает до нужного числа знаков после запятой
+                            //str = ValueChek.GetAddZeroStr(str, Const.RoundForDouble); //- при данных усл. выполнение не имеет смысла
+                            // запишем в массив
+                            excelTable[i, j] = strChek;
                         }
                         else
-                            // если нет - то сразу конвертируем в строку
-                            excelTable[i, j] = Convert.ToString(Cell.Value); // + " Type = " + Cell.Style.Numberformat.Format);
-                        }
-                        else
+                            excelTable[i, j] = Convert.ToString(Cell.Value);
+#else
+                        excelTable[i, j] = Convert.ToString(Cell.Text);
+#endif
+                    }
+                    else
                         {
                             excelTable[i, j] = Const.NullTextReplace;
                         }

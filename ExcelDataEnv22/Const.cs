@@ -39,7 +39,7 @@ namespace ExcelData
         public static string XDataKeyExcelFilePath = "samexceldatapath";
         public static string XDataKeyExcelSheetName = "samexceldatasheet";
 
-        public static int RoundForDouble = 4; // число разрядов после ,
+        public static int RoundForDouble = 2; // число разрядов после ,
     }
 
     public static class Messg

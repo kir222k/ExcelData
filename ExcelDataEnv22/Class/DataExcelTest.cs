@@ -39,20 +39,30 @@ namespace ExcelData.Class
                     ExcelRangeBase Cell = worksheet.Cells[i + 1, j + 1];
                     if (Cell.Value != null)
                     {
+                        // найдем числа количеством знаков после запятой, кот. больше, чем заданное. напр. 2.
 
-                        //// проверяем , если это число - округляем до 2 знаков 
+                        // переведем значение ячейки в строку.
                         string strChek = Convert.ToString(Cell.Value);
 
                         if (
-                            (Cell.Style.Numberformat.Format.Contains("0.0")) ||
-                            (ValueChek.IsDigitStr(strChek))
+                            // (Cell.Style.Numberformat.Format.Contains("0.0")) || // Если формат числа .. уберем это из условия 
+                            // проверяем , если это строка, кот. может быть преобразована в число -
+                            // или все цифры или цифры с единств. разделителем "," или "."
+                            (ValueChek.IsDigitStr(strChek)) &&
+                             (ValueChek.GetQuantOfPoint(strChek) > 0) // т.е. дробь
+                            //(ValueChek.GetQuantOfPoint(strChek) > Const.RoundForDouble) // проверяем, если число знаков  больше заданного.
                            )
                         {
-                            double valueDouble = Convert.ToDouble(ValueChek.GetPointValid(Convert.ToString(Cell.Value)));
-
+                            // т.е. нашли строку, кот. может быть преобразована в число, и число знаков больше заданного
+                            // для нашего случая заменим разделитель, если он "." на ","
+                            string strChek2 = ValueChek.GetStringWithPointCorrect(Convert.ToString(Cell.Value));
+                            // преобразуем в число
+                            double valueDouble = Convert.ToDouble(strChek2);
+                            // округлим
                             string str = Convert.ToString(Math.Round(valueDouble, Const.RoundForDouble));
-                            str = ValueChek.GetAddZeroStr(str, Const.RoundForDouble);
-
+                            // добавим нули, если не хватает до нужного числа знаков после запятой
+                            str = ValueChek.GetAddZeroStr(str, Const.RoundForDouble); //- при данных усл. выполнение не имеет смысла
+                            // запишем в массив
                             excelTable[i, j] = "Value=" + str + " Format=" + Cell.Style.Numberformat.Format;
                         }
                         else
